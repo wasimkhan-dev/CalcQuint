@@ -48,6 +48,7 @@
 label{
   font-size:13px;
   margin-bottom:6px;
+  font-weight: 300; /* Requested 300 */
 }
 input[type=number]{
   width:100%;
@@ -55,6 +56,7 @@ input[type=number]{
   border:1px solid #dcdce6;
   border-radius:8px;
   font-size:15px;
+  font-weight: 400; /* Requested 400 */
 }
 .cq-btn{
   padding:10px;
@@ -86,9 +88,17 @@ input[type=number]{
   align-items:center;
   gap:12px;
 }
+.advanced-row label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 0;
+  white-space: nowrap; /* Prevent "Advanced rate" from wrapping */
+}
 .adv-info{
   font-size:12px;
   color:var(--muted);
+  line-height: 1.2;
 }
 
 .extras-row{
@@ -108,6 +118,11 @@ input[type=number]{
   justify-content:space-between;
   margin:6px 0;
 }
+/* Target the value span (2nd child) */
+.kpi-line span:last-child {
+  font-weight: 500; /* Requested 500 */
+}
+
 .kpi-divider{
   border-top:1px solid #eee;
   margin:12px 0;
@@ -202,7 +217,7 @@ input[type=number]{
   background:#f9f9f9;
 }
 .acc-row .year{
-  font-weight:400;
+  font-weight:500;
   color:var(--primary);
   display: flex;
   align-items: center;
@@ -263,6 +278,8 @@ input[type=number]{
   text-align:left;
 }
 
+
+
 /* ------------------------ */
 /* CSV Section */
 /* ------------------------ */
@@ -278,4 +295,271 @@ input[type=number]{
   display:flex;
   gap:10px;
   justify-content:flex-end;
+}
+
+/* ------------------------ */
+/* Tooltips (Question Mark) */
+/* ------------------------ */
+.cq-tooltip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background: #e0e0e0;
+  color: #666;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: help;
+  margin-left: 6px;
+  position: relative;
+  vertical-align: middle;
+}
+
+.cq-tooltip-icon:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* Tooltip Popup */
+.cq-tooltip-icon::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: 125%; /* Above the icon */
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(30, 30, 47, 0.95);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: normal;
+  width: max-content;
+  max-width: 200px;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  z-index: 100;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  visibility: hidden;
+  font-weight: 400;
+}
+
+.cq-tooltip-icon:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Small arrow */
+.cq-tooltip-icon::before {
+  content: "";
+  position: absolute;
+  bottom: 85%; /* Just below the popup */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgba(30, 30, 47, 0.95) transparent transparent transparent;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s;
+}
+
+.cq-tooltip-icon:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+/* --------------------------------------------------- */
+/* MOBILE RESPONSIVENESS (ADDED) */
+/* --------------------------------------------------- */
+
+@media (max-width: 600px) {
+
+  /* Global Container Spacing */
+  #cq-widget-advanced-only {
+    padding: 0;
+  }
+  
+  /* Stack Panels */
+  .cq-top {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  /* Panel Padding */
+  .cq-left, .cq-right {
+    padding: 16px;
+  }
+
+  /* Prevent iOS Zoom on focus */
+  input[type=number], select, textarea {
+    font-size: 16px !important; 
+  }
+
+  /* Adjust Donut Chart Size */
+  .donut-svg {
+    width: 150px;
+    height: 150px;
+  }
+
+  /* --------------------------------- */
+  /* Responsive Amortization Schedule */
+  /* --------------------------------- */
+  
+  /* Change Grid to Flex/Block for Rows */
+  .acc-row {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 12px 10px;
+    gap: 8px;
+    border-bottom: 1px solid #eee;
+  }
+
+  /* Year always full width on top */
+  .acc-row .year {
+    width: 100%;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  /* Data columns share space */
+  .acc-row .num {
+    text-align: left;
+    flex: 1; /* Distribute evenly */
+    font-size: 13px;
+    color: var(--muted);
+  }
+  
+  /* Add labels via pseudo-elements for clarity if desired, 
+     or just let them sit. Let's keep it clean: 
+     Principal | Interest | Balance 
+  */
+  
+  /* Month Table - Compact Table (No Scroll, Reader Friendly) */
+  .acc-panel {
+    overflow-x: hidden; /* No scroll */
+    margin: 0;
+    padding: 10px 0 0;
+  }
+  
+  .month-table {
+    display: table;
+    width: 100%;
+    table-layout: auto; /* Changed to auto to reduce gaps (Blue line) */
+    font-size: 11px; /* Readable small font */
+  }
+
+  .month-table thead {
+    display: table-header-group;
+  }
+
+  .month-table tbody {
+    display: table-row-group;
+  }
+
+  .month-table tr {
+    display: table-row;
+    margin: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .month-table th, .month-table td {
+    display: table-cell;
+    padding: 6px 4px;
+    border-bottom: 1px solid #eee;
+    text-align: right;
+    white-space: nowrap;
+    color: var(--primary);
+    width: auto;
+  }
+  
+  .month-table th {
+    font-weight: 600;
+    color: var(--muted);
+    font-size: 10px;
+    text-transform: uppercase;
+  }
+
+  /* Reset Card Styles */
+  .month-table td[data-label="Month"] {
+    font-weight: 400;
+    font-size: 11px;
+    color: var(--primary);
+    padding-bottom: 6px;
+    border: none; /* Reset */
+    border-bottom: 1px solid #eee; 
+    margin: 0;
+    display: table-cell;
+    text-align: left;
+  }
+
+  .month-table td:not([data-label="Month"])::before {
+    content: none; /* Remove labels */
+  }
+
+  /* HIDE 'Beginning' Column (2nd col) - REVERTED per user request */
+  .month-table th:nth-child(2),
+  .month-table td:nth-child(2) {
+    display: table-cell; /* Show it */
+  }
+
+  /* Shorten Headers to fit */
+  .month-table th {
+    font-size: 9px; /* Tiny headers */
+    padding: 6px 1px;
+    letter-spacing: -0.5px; /* Squeeze text */
+  }
+  
+  /* Trick to replace text with shorter versions on mobile */
+  .month-table th { color: transparent; position: relative; height: 20px; }
+  .month-table th::after { 
+    position: absolute; 
+    left: 0; top: 6px; 
+    width: 100%; 
+    color: var(--muted); 
+    text-align: right;
+  }
+  
+  /* Manual header replacements */
+  .month-table th:nth-child(1) { color: var(--muted); } /* Keep "Month" or make it "#" */
+  .month-table th:nth-child(1)::after { content: none; }
+  
+  .month-table th:nth-child(2)::after { content: "Beg."; }
+  .month-table th:nth-child(3)::after { content: "Int."; }
+  .month-table th:nth-child(4)::after { content: "Prin."; }
+  .month-table th:nth-child(5)::after { content: "End"; }
+
+  /* Month Column Width */
+  .month-table th:nth-child(1),
+  .month-table td:nth-child(1) {
+    width: 60px; /* Increased from 20px to fix spacing */
+    text-align: left;
+    padding-left: 4px; /* Added slight padding */
+  }
+
+  /* Add space between Principal and End columns */
+  .month-table th:nth-child(4),
+  .month-table td:nth-child(4) {
+    padding-right: 15px;
+  }
+  
+  /* Tweak Data cells */
+  .month-table td {
+    font-size: 10px; /* Small but hopefully readable */
+    padding: 6px 1px;
+    letter-spacing: -0.5px;
+  }
+
+  
+  /* Adjust extras row to stack */
+  .extras-row {
+    flex-direction: column;
+    gap: 12px;
+  }
 }

@@ -11,7 +11,7 @@
   <!-- Font: Prompt -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 
   <!-- MathJax (loaded only if missing) -->
@@ -37,29 +37,35 @@
     <div class="cq-col cq-left">
 
       <div class="cq-field">
-        <label for="cq-amount">Loan amount ($)</label>
+        <label for="cq-amount">
+          Loan amount ($)
+          <span class="cq-tooltip-icon" data-tip="Min $1,000 – Max $5,000,000">?</span>
+        </label>
         <input id="cq-amount" type="number" min="1000" max="5000000" step="0.01" placeholder="250000">
-        <div class="small"><code>Min $1,000 – Max $5,000,000</code></div>
       </div>
 
       <div class="cq-field">
-        <label for="cq-rate">Annual interest rate (%)</label>
+        <label for="cq-rate">
+          Annual interest rate (%)
+          <span id="cq-rate-tooltip" class="cq-tooltip-icon" data-tip="Min 0.01% – Max 25">?</span>
+        </label>
         <input id="cq-rate" type="number" min="0.01" max="25" step="0.01" placeholder="3.5">
-        <div class="small" id="cq-rate-note"><code>Min 0.01% – Max 25</code></div>
-
+        
         <div class="advanced-row">
           <label>
             <input id="cq-adv-toggle" type="checkbox">
             <span>Advanced rate</span>
           </label>
-          <div class="adv-info">Allow custom values outside 0.01 - 25</div>
+          <div class="adv-info">(Range  0.01 - 25)</div>
         </div>
       </div>
 
       <div class="cq-field">
-        <label for="cq-term">Term (months)</label>
+        <label for="cq-term">
+          Term (months)
+          <span class="cq-tooltip-icon" data-tip="6 – 480 months">?</span>
+        </label>
         <input id="cq-term" type="number" min="6" max="480" step="1" placeholder="360">
-        <div class="small">6 – 480 months</div>
       </div>
 
       <div class="extras-row">

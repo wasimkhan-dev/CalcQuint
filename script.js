@@ -26,7 +26,7 @@
 
   const advToggle = $('cq-adv-toggle');
   const rateInput = $('cq-rate');
-  const rateNote = $('cq-rate-note');
+  const rateTooltip = $('cq-rate-tooltip'); // Renamed from rateNote
 
   let globalRows = [];
   const ABS_MAX = 100000;
@@ -52,11 +52,15 @@
     if(advToggle.checked){
       rateInput.removeAttribute('min');
       rateInput.removeAttribute('max');
-      rateNote.innerHTML = "<span style='color:#b85b00;font-weight:600'>Advanced mode enabled.</span>";
+      // Update Tooltip Text
+      rateTooltip.setAttribute('data-tip', "Advanced mode enabled.");
+      rateTooltip.style.color = "#b85b00"; // Optional visual cue
     } else {
       rateInput.setAttribute('min','0.01');
       rateInput.setAttribute('max','25');
-      rateNote.innerHTML = "<code>Min 0.01% – Max 25</code>";
+      // Restore Tooltip Text
+      rateTooltip.setAttribute('data-tip', "Min 0.01% – Max 25");
+      rateTooltip.style.color = "";
     }
   });
 
@@ -156,11 +160,11 @@
       const r = globalRows[i];
       const tr=document.createElement("tr");
       tr.innerHTML = `
-        <td class="left">Month ${r.month}</td>
-        <td>$${format(r.begin)}</td>
-        <td>$${format(r.interest)}</td>
-        <td>$${format(r.principal)}</td>
-        <td>$${format(r.end)}</td>
+        <td class="left" data-label="Month">Month ${r.month}</td>
+        <td data-label="Beginning">$${format(r.begin)}</td>
+        <td data-label="Interest">$${format(r.interest)}</td>
+        <td data-label="Principal">$${format(r.principal)}</td>
+        <td data-label="Ending">$${format(r.end)}</td>
       `;
       tbody.appendChild(tr);
     }
