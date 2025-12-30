@@ -14,6 +14,7 @@
   const elState      = document.getElementById('cq-state');
   
   const elCalcBtn    = document.getElementById('cq-calc-btn');
+  const elResetBtn   = document.getElementById('cq-reset-btn');
   const elError      = document.getElementById('cq-input-error');
 
   // Outputs
@@ -208,7 +209,28 @@
       amFullDiv.style.display = 'block';
       toggleLink.textContent = 'Hide Amortization Table';
     }
+    amFullDiv.scrollIntoView({behavior: 'smooth'});
   }
+
+  elResetBtn.addEventListener('click', () => {
+     // Clear Inputs
+     [elPrice, elTerm, elRate, elIncentives, elDown, elTradeVal, elTradeOwed, elTaxRate, elFees].forEach(el => el.value = '');
+     elState.selectedIndex = 0; // Reset Select
+
+     // Reset State
+     state = {
+       price: 0, term: 0, rate: 0, incentives: 0, down: 0, tradeVal: 0, tradeOwed: 0, taxRate: 0, fees: 0
+     };
+
+     resetOutputs();
+     elError.style.display = 'none';
+
+     // Hide Amortization
+     amFullDiv.style.display = 'none';
+     toggleLink.textContent = 'View Amortization Table';
+     csvCtas.style.display = 'none';
+     exportBtn.style.display = 'none'; // or csvCtas hides it
+  });
 
   function showError(msg) {
     elError.textContent = msg;

@@ -52,7 +52,7 @@
 /* ------------------------ */
 label{
   font-size:13px;
-  margin-bottom:6px;
+  margin-bottom:1px;
   font-weight: 300; /* Requested 300 */
 }
 input[type=number], select{
@@ -64,13 +64,14 @@ input[type=number], select{
   font-weight: 400; /* Requested 400 */
   background-color: white;
 }
-.cq-btn{
-  padding:10px;
-  border-radius:8px;
-  background:#ccc;
-  color:#999;
-  cursor:not-allowed;
-  border:0;
+.cq-btn {
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--primary);
+  color: #fff;
+  cursor: pointer;
+  border: 0;
+  width: 100%;
 }
 .cq-btn.active{
   background:var(--primary);
@@ -185,7 +186,7 @@ input[type=number], select{
   display:none;
   margin-top:12px;
   color:var(--accent);
-  text-decoration:underline;
+  text-decoration:none;
   cursor:pointer;
 }
 
@@ -568,4 +569,20 @@ input[type=number], select{
     flex-direction: column;
     gap: 12px;
   }
+}
+
+/* Reset Button */
+.cq-btn-reset {
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--light-bg);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  margin-top: 6px;
+  width: 100%;
+}
+.cq-btn-reset:hover {
+  background: #e0e0e0;
+  color: var(--primary);
 }

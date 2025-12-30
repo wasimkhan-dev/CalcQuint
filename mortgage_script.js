@@ -13,6 +13,7 @@
   const hoaIn = $('cq-hoa');
 
   const btn = $('cq-calc-btn');
+  const btnReset = $('cq-reset-btn');
   const err = $('cq-input-error');
 
   // Outputs
@@ -350,8 +351,42 @@
       URL.revokeObjectURL(url);
     };
 
-    // Auto-scroll to result?
-    // donutWrap.scrollIntoView({behavior:'smooth'});
+    // Auto-scroll to result
+    amFull.scrollIntoView({behavior:'smooth'});
+  };
+
+  btnReset.onclick = () => {
+    // Clear Inputs
+    [homePriceIn, downAmtIn, downPctIn, rateIn, taxIn, insIn, hoaIn].forEach(el => {
+      if(el) el.value = '';
+    });
+    // Reset Select
+    if(termIn) termIn.value = "30"; 
+
+    // Clear Outputs
+    const zero = "$0.00";
+    txtMonthlyPI.textContent = zero;
+    txtMonthTax.textContent = zero;
+    txtMonthIns.textContent = zero;
+    txtMonthHoa.textContent = zero;
+    txtTotalMonthly.textContent = zero;
+    txtTotalInterest.textContent = zero;
+    txtTotalCost.textContent = zero;
+
+    // Reset Chart
+    donutInterest.setAttribute("stroke-dasharray","0 100");
+    donutPrincipal.setAttribute("stroke-dasharray","0 100");
+    donutLabel.textContent = "";
+    
+    // Hide Amortization
+    amFull.style.display="none";
+    toggleLink.style.display="none";
+    csvCtas.style.display="none";
+    accRoot.innerHTML='';
+    
+    // Clear Error
+    showErr('');
+    updateBtn();
   };
 
   toggleLink.onclick=()=>{

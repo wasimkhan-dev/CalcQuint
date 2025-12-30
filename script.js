@@ -5,6 +5,7 @@
   const inputs = required.concat(['cq-extra-monthly','cq-extra-once']).map(id => $(id));
 
   const btn = $('cq-calc-btn');
+  const btnReset = $('cq-reset-btn');
   const err = $('cq-input-error');
 
   const txtMonthly = $('txt-monthly');
@@ -244,6 +245,38 @@
       a.click();
       URL.revokeObjectURL(url);
     };
+
+    // Auto-scroll
+    amFull.scrollIntoView({behavior:'smooth'});
+  };
+
+  btnReset.onclick = () => {
+    // Clear Inputs
+    inputs.forEach(i => i.value = '');
+    
+    // Reset Checkbox
+    advToggle.checked = false;
+    advToggle.dispatchEvent(new Event('change')); 
+
+    // Clear Outputs
+    const zero = "$0.00";
+    txtMonthly.textContent = zero;
+    txtInterest.textContent = zero;
+    txtMonths.textContent = "0";
+
+    // Reset Chart
+    donutInterest.setAttribute("stroke-dasharray","0 100");
+    donutPrincipal.setAttribute("stroke-dasharray","0 100");
+    donutLabel.textContent = "";
+
+    // Hide Amortization
+    amFull.style.display="none";
+    toggleLink.style.display="none";
+    csvCtas.style.display="none";
+    accRoot.innerHTML='';
+    
+    showErr('');
+    updateBtn();
   };
 
   toggleLink.onclick=()=>{
