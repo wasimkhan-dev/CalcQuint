@@ -38,7 +38,7 @@
   background: var(--panel-bg);
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 @media (max-width: 600px) {
@@ -52,9 +52,10 @@
 /* Inputs */
 /* ------------------------ */
 label {
+  display: block; /* Ensure margin-bottom works */
   font-size: 13px;
   margin-bottom: 1px;
-  font-weight: 300; /* Requested 300 */
+  font-weight: 300;
 }
 input[type="number"] {
   width: 100%;
@@ -111,10 +112,22 @@ input[type="number"] {
 .extras-row {
   display: flex;
   gap: 10px;
-  margin-bottom: 12px;
+  margin-bottom: 0; /* Changed from 12px to 0 to rely on parent gap */
 }
 .extras-row .half {
   flex: 1;
+}
+
+/* ... */
+
+.cq-btn-reset {
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--light-bg);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  width: 100%;
 }
 
 /* ------------------------ */
@@ -596,9 +609,9 @@ input[type="number"] {
   border-radius: 8px;
   background: var(--light-bg); /* Grey color */
   color: var(--muted);
-  border: 1px solid var(--border); /* Keep border or remove if they want solid grey block? "Reset button should be grey colour" implies background. transparent with border is what it was. Let's make it light grey background. */
+  border: 1px solid var(--border);
   cursor: pointer;
-  margin-top: 6px; /* Spacing from Calculate */
+  margin-top: 0;
   width: 100%; /* Ensure full width alignment */
 }
 .cq-btn-reset:hover {

@@ -37,7 +37,7 @@
   background:var(--panel-bg);
   display:flex;
   flex-direction:column;
-  gap: 4px;
+  gap: 6px;
 }
 
 @media(max-width:600px){
@@ -51,9 +51,10 @@
 /* Inputs */
 /* ------------------------ */
 label{
+  display: block;
   font-size:13px;
   margin-bottom:1px;
-  font-weight: 300; /* Requested 300 */
+  font-weight: 300;
 }
 input[type=number], select{
   width:100%;
@@ -119,7 +120,7 @@ select {
 .extras-row{
   display:flex;
   gap:10px;
-  margin-bottom:12px;
+  margin-bottom: 0;
 }
 .extras-row .half{
   flex:1;
@@ -587,7 +588,7 @@ select {
   color: var(--muted);
   border: 1px solid var(--border);
   cursor: pointer;
-  margin-top: 6px;
+  margin-top: 0;
   width: 100%;
 }
 .cq-btn-reset:hover {
