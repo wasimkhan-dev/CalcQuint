@@ -30,14 +30,15 @@
   flex:1;
   min-width:0;
 }
-.cq-left,.cq-right{
-  border:1px solid var(--border);
-  border-radius:15px;
-  padding:20px;
-  background:var(--panel-bg);
-  display:flex;
-  flex-direction:column;
-  gap: 6px;
+.cq-left,
+.cq-right {
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 20px;
+  background: var(--panel-bg);
+  display: flex;
+  flex-direction: column;
+  gap: 18px; /* it was 6px – this is the main fix */
 }
 
 @media(max-width:600px){
@@ -50,11 +51,17 @@
 /* ------------------------ */
 /* Inputs */
 /* ------------------------ */
-label{
+label {
   display: block;
-  font-size:13px;
-  margin-bottom:1px;
-  font-weight: 300;
+  font-size: 13px;
+  font-weight: 400;
+  margin-bottom: 6px; /*visible separation */
+  line-height: 1.4;
+}
+
+.cq-field {
+  display: flex;
+  flex-direction: column;
 }
 input[type=number], select{
   width:100%;

@@ -38,7 +38,7 @@
   background: var(--panel-bg);
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 18px; /* it was 6px – this is the main fix */
 }
 
 @media (max-width: 600px) {
@@ -52,10 +52,16 @@
 /* Inputs */
 /* ------------------------ */
 label {
-  display: block; /* Ensure margin-bottom works */
+  display: block;
   font-size: 13px;
-  margin-bottom: 1px;
-  font-weight: 300;
+  font-weight: 400;
+  margin-bottom: 6px; /*visible separation */
+  line-height: 1.4;
+}
+
+.cq-field {
+  display: flex;
+  flex-direction: column;
 }
 input[type="number"] {
   width: 100%;
