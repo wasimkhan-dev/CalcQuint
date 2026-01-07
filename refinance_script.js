@@ -140,7 +140,13 @@
     }
 
     // 3. Primary Outputs
-    const monthlySavings = state.curPmt - newMonthlyPayment;
+    // 3. Primary Outputs
+    const monthlyPaymentSavings = state.curPmt - newMonthlyPayment;
+
+    // Interest Savings (used for Breakeven calculation)
+    const currentMonthlyInterest = state.curBal * (state.curRate / 100 / 12);
+    const newMonthlyInterestPart = newLoanAmount * monthlyRate;
+    const monthlyInterestSavings = currentMonthlyInterest - newMonthlyInterestPart;
     
     // 4. Costs
     const pointsCost = newLoanAmount * (state.points / 100);
@@ -152,28 +158,58 @@
     
     const totalRefinanceCost = totalNewInterest + totalUpfrontCost;
 
-    // 6. Breakeven
+    // 6. Breakeven (Iterative Calculation)
     let breakevenMonths = null;
-    if (monthlySavings > 0) {
-      breakevenMonths = totalUpfrontCost / monthlySavings;
+    if (totalUpfrontCost > 0) {
+      let cumulativeSavings = 0;
+      let tempOldBal = state.curBal;
+      let tempNewBal = newLoanAmount;
+      const oldMonthlyRate = (state.curRate / 100) / 12;
+
+      // Simulate up to reasonable limit (e.g. 100 years) to find breakeven
+      for (let m = 1; m <= 1200; m++) {
+        // Old Loan Interest
+        const oldInt = tempOldBal * oldMonthlyRate;
+        const oldPrin = state.curPmt - oldInt;
+        tempOldBal -= oldPrin;
+        
+        // New Loan Interest
+        const newInt = tempNewBal * monthlyRate;
+        const newPrin = newMonthlyPayment - newInt;
+        tempNewBal -= newPrin;
+
+        // Cumulative Interest Savings
+        cumulativeSavings += (oldInt - newInt);
+
+        if (cumulativeSavings >= totalUpfrontCost) {
+          breakevenMonths = m;
+          break;
+        }
+        
+        // Safety break if loans paid off
+        if (tempOldBal <= 0 && tempNewBal <= 0) break;
+      }
+    } else {
+        // No cost = immediate breakeven if savings positive
+        if (monthlyInterestSavings > 0) breakevenMonths = 0;
     }
 
     // --- RENDER ---
     outNewMonthly.textContent = fmtCurrency(newMonthlyPayment);
-    outSavings.textContent = fmtCurrency(monthlySavings);
+    outSavings.textContent = fmtCurrency(monthlyPaymentSavings);
     
     // Colorize Savings
-    if(monthlySavings > 0) {
+    if(monthlyPaymentSavings > 0) {
       outSavings.style.color = 'var(--accent)'; 
       outSavings.textContent = "+" + outSavings.textContent;
-    } else if(monthlySavings < 0) {
+    } else if(monthlyPaymentSavings < 0) {
       outSavings.style.color = '#b00020'; // negative red
     } else {
       outSavings.style.color = 'var(--muted)';
     }
 
     if(breakevenMonths !== null) {
-      outBreakeven.textContent = breakevenMonths.toFixed(1) + " Months";
+      outBreakeven.textContent = breakevenMonths + " Months";
     } else {
       outBreakeven.textContent = "Never (No Savings)";
     }
