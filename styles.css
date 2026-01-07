@@ -21,9 +21,15 @@
 /* ------------------------ */
 /* Layout Panels */
 /* ------------------------ */
+/* ------------------------ */
+/* Layout Panels */
+/* ------------------------ */
+/* ------------------------ */
+/* Layout Panels */
+/* ------------------------ */
 .cq-top {
   display: flex;
-  gap: 20px;
+  gap: 16px; /* User requested 16px */
   margin-bottom: 16px;
 }
 .cq-col {
@@ -34,17 +40,17 @@
 .cq-right {
   border: 1px solid var(--border);
   border-radius: 15px;
-  padding: 20px;
+  padding: 14px; /* User requested 14px */
   background: var(--panel-bg);
   display: flex;
   flex-direction: column;
-  gap: 18px; /* it was 6px – this is the main fix */
+  gap: 14px; /* User requested 14px */
 }
 
 @media (max-width: 600px) {
   .cq-top {
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
   }
 }
 
@@ -55,7 +61,7 @@ label {
   display: block;
   font-size: 13px;
   font-weight: 400;
-  margin-bottom: 6px; /*visible separation */
+  margin-bottom: 6px; /* User requested 6px */
   line-height: 1.4;
 }
 
@@ -65,20 +71,20 @@ label {
 }
 input[type="number"] {
   width: 100%;
-  padding: 10px;
+  padding: 8px; /* User requested 8px */
   border: 1px solid #dcdce6;
   border-radius: 8px;
   font-size: 15px;
-  font-weight: 400; /* Requested 400 */
+  font-weight: 400;
 }
 .cq-btn {
-  padding: 10px;
+  padding: 12px;
   border-radius: 8px;
-  background: var(--primary); /* Updated to Primary */
-  color: #fff; /* Updated to White text */
-  cursor: pointer; /* Changed to pointer as it looks active now */
+  background: var(--primary);
+  color: #fff;
+  cursor: pointer;
   border: 0;
-  width: 100%; /* Ensure full width like reset button for consistency? The reset button was set to 100%, let's check input width. Inputs are 100%. Button should likely be 100%. */
+  width: 100%;
 }
 .cq-btn.active {
   background: var(--primary);
@@ -107,7 +113,7 @@ input[type="number"] {
   align-items: center;
   gap: 6px;
   margin-bottom: 0;
-  white-space: nowrap; /* Prevent "Advanced rate" from wrapping */
+  white-space: nowrap; 
 }
 .adv-info {
   font-size: 12px;
@@ -117,8 +123,8 @@ input[type="number"] {
 
 .extras-row {
   display: flex;
-  gap: 10px;
-  margin-bottom: 0; /* Changed from 12px to 0 to rely on parent gap */
+  gap: 8px; /* User requested 8px */
+  margin-bottom: 0; 
 }
 .extras-row .half {
   flex: 1;
@@ -127,7 +133,8 @@ input[type="number"] {
 /* ... */
 
 .cq-btn-reset {
-  padding: 10px;
+  padding: 8px; /* Match input padding for consistency if preferred, user didn't specify button padding but let's keep it proportionate or keep previous? User didn't specify button padding explicitly, but input padding is 8px. It's safer to keep buttons clickable, but usually buttons match input height. Let's start with 10px or keep 12px? The user request said "Input Padding". I will assume buttons should stay larger for clickability, or maybe match. Let's keep buttons at 12px for now unless asked, or reduce to 10px to look balanced. I will keep 12px for buttons as user didn't request button change. Wait, reset button matches input usually. Let's make reset button 8px+border? or 10px. I'll stick to 10px for buttons to be safe, or leave them. User only said Input Padding. I'll leave buttons at 12px or 10px. Actually, usually inputs and buttons should align. If input padding is 8px, height is approx 15+16+2 = 33px. If button padding is 12px, height is ~40+. Let's reduce button padding to 10px to be closer but distinct, or maybe 8px? I will leave buttons alone for now, or maybe Set to 10px. The user was very specific about inputs. I'll change reset button to match input padding convention if it looks like an input, but it's a button. I will leave buttons (cq-btn and cq-btn-reset) at 12px unless it looks weird. Actually, let's keep them at 10px to be slightly smaller than 12px but bigger than 8px? No, let's just stick to the requested changes. */
+  padding: 10px; /* Reducing slightly to balance with smaller inputs, but not as small as 8px */
   border-radius: 8px;
   background: var(--light-bg);
   color: var(--muted);
@@ -168,19 +175,26 @@ input[type="number"] {
   height: 180px;
 }
 
+/* Tooltip */
 .chart-tooltip {
   position: fixed;
   display: none;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(30, 30, 47, 0.95); /* Default Dark */
   color: #fff;
   padding: 8px 12px;
   border-radius: 6px;
   font-size: 14px;
+  font-weight: 500;
   pointer-events: none;
   z-index: 1000;
   white-space: nowrap;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: opacity 0.2s, transform 0.1s;
+}
+
+.chart-tooltip.interest {
+  background: var(--accent); /* Yellow */
+  color: #fff;
 }
 
 .legend {
@@ -241,9 +255,15 @@ input[type="number"] {
   border-bottom: 1px solid #f1f3f8;
   cursor: pointer;
   background: #fff;
+  transition: background 0.2s;
 }
 .acc-row:hover {
-  background: #f9f9f9;
+  background: #fcfcfc;
+}
+.acc-row:hover .year,
+.acc-row:hover .num,
+.acc-row:hover .icon {
+   color: var(--accent);
 }
 .acc-row .year {
   font-weight: 500;
@@ -253,16 +273,16 @@ input[type="number"] {
   gap: 8px;
   transition: color 0.2s ease;
 }
-.acc-row:hover .year {
-  color: var(--accent);
-}
 .acc-row .icon {
   font-size: 38px; /* Increased size */
   line-height: 1;
   font-weight: 300;
+  transition: color 0.2s;
 }
 .acc-row .num {
   text-align: right;
+  color: var(--primary);
+  transition: color 0.2s;
 }
 
 /* MONTH PANELS */
@@ -469,16 +489,17 @@ input[type="number"] {
 
   /* Month Table - Compact Table (No Scroll, Reader Friendly) */
   .acc-panel {
-    overflow-x: hidden; /* No scroll */
+    overflow-x: auto; /* Scrollable */
     margin: 0;
     padding: 10px 0 0;
+    -webkit-overflow-scrolling: touch;
   }
 
   .month-table {
     display: table;
     width: 100%;
+    min-width: 0;
     table-layout: auto; /* Changed to auto to reduce gaps (Blue line) */
-    font-size: 11px; /* Readable small font */
   }
 
   .month-table thead {
@@ -500,25 +521,27 @@ input[type="number"] {
   .month-table th,
   .month-table td {
     display: table-cell;
-    padding: 6px 4px;
+    padding: 5px 2px;
     border-bottom: 1px solid #eee;
     text-align: right;
-    white-space: nowrap;
+    white-space: normal;
     color: var(--primary);
     width: auto;
+    font-size: 8px; /* 8px font request */
+    word-break: break-word;
   }
 
   .month-table th {
     font-weight: 600;
     color: var(--muted);
-    font-size: 10px;
+    font-size: 9px;
     text-transform: uppercase;
   }
 
   /* Reset Card Styles */
   .month-table td[data-label="Month"] {
     font-weight: 400;
-    font-size: 11px;
+    font-size: 8px;
     color: var(--primary);
     padding-bottom: 6px;
     border: none; /* Reset */
@@ -584,7 +607,9 @@ input[type="number"] {
   /* Month Column Width */
   .month-table th:nth-child(1),
   .month-table td:nth-child(1) {
-    width: 60px; /* Increased from 20px to fix spacing */
+    width: auto;
+    min-width: 40px;
+    max-width: 50px;
     text-align: left;
     padding-left: 4px; /* Added slight padding */
   }
@@ -593,13 +618,6 @@ input[type="number"] {
   .month-table th:nth-child(4),
   .month-table td:nth-child(4) {
     padding-right: 15px;
-  }
-
-  /* Tweak Data cells */
-  .month-table td {
-    font-size: 10px; /* Small but hopefully readable */
-    padding: 6px 1px;
-    letter-spacing: -0.5px;
   }
 
   /* Adjust extras row to stack */
@@ -613,7 +631,7 @@ input[type="number"] {
 .cq-btn-reset {
   padding: 10px;
   border-radius: 8px;
-  background: var(--light-bg); /* Grey color */
+  background: var(--light-bg);
   color: var(--muted);
   border: 1px solid var(--border);
   cursor: pointer;

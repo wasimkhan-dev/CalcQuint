@@ -2,28 +2,23 @@
   // ------------------------------------------------------------------------
   // 1. INPUT ELEMENT REFERENCES
   // ------------------------------------------------------------------------
-  const elPrice      = document.getElementById('cq-price');
-  const elTerm       = document.getElementById('cq-term');
+  const elLoanAmount = document.getElementById('cq-loan-amount');
   const elRate       = document.getElementById('cq-rate');
-  const elIncentives = document.getElementById('cq-incentives');
-  const elDown       = document.getElementById('cq-down');
-  const elTradeVal   = document.getElementById('cq-trade-val');
-  const elTradeOwed  = document.getElementById('cq-trade-owed');
-  const elTaxRate    = document.getElementById('cq-tax-rate');
-  const elFees       = document.getElementById('cq-fees');
-  const elState      = document.getElementById('cq-state');
-  
+  const elYears      = document.getElementById('cq-years');
+  const elMonths     = document.getElementById('cq-months');
+  const elStartDate  = document.getElementById('cq-start-date');
+
   const elCalcBtn    = document.getElementById('cq-calc-btn');
   const elResetBtn   = document.getElementById('cq-reset-btn');
   const elError      = document.getElementById('cq-input-error');
 
   // Outputs
   const outMonthly       = document.getElementById('txt-monthly');
-  const outLoanAmt       = document.getElementById('txt-loan-amt');
-  const outTax           = document.getElementById('txt-tax');
-  const outUpfront       = document.getElementById('txt-upfront');
-  const outTotalCost     = document.getElementById('txt-total-cost');
+  const outPayoffDate    = document.getElementById('txt-payoff-date');
+  const outTotalPayments = document.getElementById('txt-total-payments');
   const outTotalInterest = document.getElementById('txt-total-interest');
+  
+  const rightPanel       = document.querySelector('.cq-right');
 
   // Chart
   const donutInterest  = document.getElementById('donut-interest');
@@ -43,35 +38,35 @@
   // 2. STATE & CONSTANTS
   // ------------------------------------------------------------------------
   let state = {
-    price: 30000,
-    term: 60,
-    rate: 4.5,
-    incentives: 0,
-    down: 0,
-    tradeVal: 0,
-    tradeOwed: 0,
-    taxRate: 0,
-    fees: 0
+    amount: 10000,
+    rate: 10,
+    years: 3,
+    months: 0,
+    startDate: '' // "YYYY-MM"
   };
 
   let schedule = [];
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+                      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
   // Init
   function init() {
-    // Attach listeners
-    // [elPrice, elTerm, elRate, elIncentives, elDown, elTradeVal, elTradeOwed, elTaxRate, elFees].forEach(inp => {
-    //   inp.addEventListener('input', handleInput);
-    // });
+    // Set default Date to next month or current month?
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2,'0');
+    elStartDate.value = `${y}-${m}`;
+    state.startDate = elStartDate.value;
 
-    // Button: Calculate on click
     elCalcBtn.addEventListener('click', handleInput);
-    elCalcBtn.classList.add('active'); // Make sure button is enabled visually
+    elCalcBtn.classList.add('active'); 
 
     // Amortization toggle
     toggleLink.addEventListener('click', () => {
       if(amFullDiv.style.display === 'none') {
         amFullDiv.style.display = 'block';
         toggleLink.textContent = 'Hide Amortization Table';
+        amFullDiv.scrollIntoView({behavior: 'smooth'});
       } else {
         amFullDiv.style.display = 'none';
         toggleLink.textContent = 'View Amortization Table';
@@ -83,10 +78,8 @@
     // Tooltip hover
     setupChartTooltips();
 
-    // Initial logic - Optional: Run once to show defaults or leave empty? 
-    // Usually better to show defaults so it's not empty zeros.
     readInputs();
-    calculate();
+    calculate(false);
   }
 
   // ------------------------------------------------------------------------
@@ -94,142 +87,96 @@
   // ------------------------------------------------------------------------
   function handleInput() {
     readInputs();
-    calculate();
+    calculate(true);
   }
 
   function readInputs() {
-    state.price      = parseFloat(elPrice.value) || 0;
-    state.term       = parseInt(elTerm.value) || 0;
-    state.rate       = parseFloat(elRate.value) || 0;
-    state.incentives = parseFloat(elIncentives.value) || 0;
-    state.down       = parseFloat(elDown.value) || 0;
-    state.tradeVal   = parseFloat(elTradeVal.value) || 0;
-    state.tradeOwed  = parseFloat(elTradeOwed.value) || 0;
-    state.taxRate    = parseFloat(elTaxRate.value) || 0;
-    state.fees       = parseFloat(elFees.value) || 0;
+    state.amount    = parseFloat(elLoanAmount.value) || 0;
+    state.rate      = parseFloat(elRate.value) || 0;
+    state.years     = parseInt(elYears.value) || 0;
+    state.months    = parseInt(elMonths.value) || 0;
+    state.startDate = elStartDate.value; // "YYYY-MM"
   }
 
   // ------------------------------------------------------------------------
   // 4. CORE CALCULATION
   // ------------------------------------------------------------------------
-  function calculate() {
-    // Validation
+  function calculate(shouldScroll) {
     elError.style.display = 'none';
-    elCalcBtn.classList.add('active'); // always active for realtime
     
-    if (state.price <= 0) {
-      // Don't error immediately on empty initial, but if user types 0 or negative
-      if(elPrice.value !== '' && state.price <= 0) {
-         showError('Auto Price must be greater than 0.');
-         return;
-      }
-      // If empty, just zero out
-      resetOutputs();
-      return;
+    // Validations
+    if (state.amount <= 0) {
+       if(elLoanAmount.value !== '' && state.amount <= 0) showError('Loan amount must be > 0.');
+       resetOutputs(); return;
     }
-    if (state.term <= 0) {
-       if(elTerm.value !== '') showError('Loan term must be > 0.');
-       resetOutputs();
-       return;
+    const totalTermMonths = (state.years * 12) + state.months;
+    if (totalTermMonths <= 0) {
+       if(elYears.value !== '' || elMonths.value !== '') showError('Loan term must be at least 1 month.');
+       resetOutputs(); return;
     }
 
-    // --- LOGIC PER USER SPECS ---
-    
-    // 1. Net Trade-in
-    // If negative, treat as additional cost (logic handled by subtraction order in loanAmount?)
-    // User Formula: loanAmount = autoPrice - cashIncentives - downPayment - tradeInValue + tradeInOwed
-    // So if (tradeVal - tradeOwed) is negative (upside down), it effectively adds to loan. Correct.
-    
-    // 2. Taxable Price
-    // taxablePrice = autoPrice - cashIncentives - downPayment - tradeInValue (Min 0)
-    let taxablePrice = state.price - state.incentives - state.down - state.tradeVal;
-    if (taxablePrice < 0) taxablePrice = 0;
-
-    // 3. Sales Tax
-    const salesTax = taxablePrice * (state.taxRate / 100);
-
-    // 4. Loan Amount (Financed Amount)
-    // Formula: autoPrice - cashIncentives - downPayment - tradeInValue + tradeInOwed
-    // Note: User said "Sales tax calculated once (not compounded)" and "Do not merge tax or fees into loan math".
-    // So Loan Amount implies strictly the vehicle finance part + negative equity. 
-    // Wait, usually if you don't pay tax/fees upfront, they are rolled into loan.
-    // BUT user explicitly said: "Output results -> Total loan amount = Value: loanAmount"
-    // And "Upfront payment = down + incentives + salesTax + fees".
-    // This strongly implies Tax and Fees are PAID UPFRONT.
-    // So I will NOT add them to loanAmount.
-    
-    let loanAmount = state.price - state.incentives - state.down - state.tradeVal + state.tradeOwed;
-    if(loanAmount < 0) loanAmount = 0; // Cannot have negative loan
-
-    // 5. Monthly Payment
+    // Calculation
     const monthlyRate = (state.rate / 100) / 12;
-    const n = state.term;
     let monthlyPayment = 0;
 
-    if (loanAmount === 0) {
-       monthlyPayment = 0;
-    } else if (state.rate === 0) {
-       monthlyPayment = loanAmount / n;
+    if (state.rate === 0) {
+      monthlyPayment = state.amount / totalTermMonths;
     } else {
-       // P * [ r(1+r)^n ] / [ (1+r)^n - 1 ]
-       const pow = Math.pow(1 + monthlyRate, n);
-       monthlyPayment = loanAmount * ( (monthlyRate * pow) / (pow - 1) );
+      const pow = Math.pow(1 + monthlyRate, totalTermMonths);
+      monthlyPayment = state.amount * ( (monthlyRate * pow) / (pow - 1) );
     }
 
-    // 6. Secondary Outputs
-    const totalPayments = monthlyPayment * n;
-    const totalInterest = totalPayments - loanAmount;
+    // Outputs
+    const totalPayments = monthlyPayment * totalTermMonths;
+    const totalInterest = totalPayments - state.amount;
     
-    // "Total cost (price, interest, tax, fees)"
-    // totalCost = autoPrice + totalInterest + salesTax + fees
-    const totalCost = state.price + totalInterest + salesTax + state.fees;
+    // Payoff Date
+    let payoffStr = "--";
+    if(state.startDate) {
+      const parts = state.startDate.split('-'); // [YYYY, MM]
+      if(parts.length === 2) {
+        const startY = parseInt(parts[0]);
+        const startM = parseInt(parts[1]) - 1; // 0-based
+        const endDate = new Date(startY, startM + totalTermMonths, 1);
+        // Format Month Year
+        payoffStr = monthNames[endDate.getMonth()] + " " + endDate.getFullYear();
+      }
+    }
 
-    // "Upfront Payment"
-    // upfrontPayment = downPayment + cashIncentives + salesTax + fees
-    const upfrontPayment = state.down + state.incentives + salesTax + state.fees;
-
-
-    // Update DOM
+    // Render
     outMonthly.textContent = fmtCurrency(monthlyPayment);
-    outLoanAmt.textContent = fmtCurrency(loanAmount);
-    outTax.textContent = fmtCurrency(salesTax);
-    outUpfront.textContent = fmtCurrency(upfrontPayment);
-    outTotalCost.textContent = fmtCurrency(totalCost);
+    outPayoffDate.textContent = payoffStr;
+    outTotalPayments.textContent = fmtCurrency(totalPayments);
     outTotalInterest.textContent = fmtCurrency(totalInterest);
 
     // Update Chart
-    updateChart(loanAmount, totalInterest);
+    updateChart(state.amount, totalInterest);
 
     // Generate Schedule
-    generateSchedule(loanAmount, monthlyRate, n, monthlyPayment);
+    generateSchedule(state.amount, monthlyRate, totalTermMonths, monthlyPayment, state.startDate);
     renderSchedule();
     
-    // Auto-open Amortization Table
-    if(schedule.length > 0) {
-      amFullDiv.style.display = 'block';
-      toggleLink.textContent = 'Hide Amortization Table';
+    if(shouldScroll && schedule.length > 0) {
+       // Auto-open and scroll to Amortization Table
+       amFullDiv.style.display = 'block';
+       toggleLink.textContent = 'Hide Amortization Table';
+       amFullDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else if (shouldScroll && rightPanel) {
+       rightPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-    amFullDiv.scrollIntoView({behavior: 'smooth'});
   }
 
   elResetBtn.addEventListener('click', () => {
-     // Clear Inputs
-     [elPrice, elTerm, elRate, elIncentives, elDown, elTradeVal, elTradeOwed, elTaxRate, elFees].forEach(el => el.value = '');
-     elState.selectedIndex = 0; // Reset Select
+     [elLoanAmount, elRate, elYears, elMonths].forEach(el => el.value = '');
+     const now = new Date();
+     elStartDate.value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
 
-     // Reset State
-     state = {
-       price: 0, term: 0, rate: 0, incentives: 0, down: 0, tradeVal: 0, tradeOwed: 0, taxRate: 0, fees: 0
-     };
-
+     state = { amount:0, rate:0, years:0, months:0, startDate: elStartDate.value };
      resetOutputs();
      elError.style.display = 'none';
-
-     // Hide Amortization
      amFullDiv.style.display = 'none';
      toggleLink.textContent = 'View Amortization Table';
      csvCtas.style.display = 'none';
-     exportBtn.style.display = 'none'; // or csvCtas hides it
   });
 
   function showError(msg) {
@@ -240,10 +187,8 @@
   function resetOutputs() {
     const zero = fmtCurrency(0);
     outMonthly.textContent = zero;
-    outLoanAmt.textContent = zero;
-    outTax.textContent = zero;
-    outUpfront.textContent = zero;
-    outTotalCost.textContent = zero;
+    outPayoffDate.textContent = "--";
+    outTotalPayments.textContent = zero;
     outTotalInterest.textContent = zero;
     updateChart(0,0);
     accRoot.innerHTML = '';
@@ -260,44 +205,16 @@
       donutLabel.textContent = '0%';
       return;
     }
-
-    // Calculate percentages for the donut
     const pPct = (principal / total) * 100;
     const iPct = (interest / total) * 100;
 
-    // Stroke-dasharray: "length gap"
-    // Per user SVG setup: circumference is ~100 (r=15.915 => 2*pi*r = 100)
-    
-    // Principal starts at 0 (top because of rotate(-90))
-    // Interest starts after Principal
-    
     donutPrincipal.style.strokeDasharray = `${pPct} ${100 - pPct}`;
-    
-    // To stack them:
-    // Actually, usually we offset the second one. 
-    // But looking at index.html logic or standard CSS donuts:
-    // If we want them to meet, we need `stroke-dashoffset`.
-    // However, the existing CSS/SVG in index.html for mortgage actually overlays them or expects correct offsets.
-    // Let's mimic standard behavior.
-    // Segment 1 (Principal): start 0.
-    // Segment 2 (Interest): start at pPct.
-    
-    // Since SVG circle dashoffset is counter-clockwise usually, check setup.
-    // transform="rotate(-90 21 21)" rotates start to top.
-    
-    // Let's set Principal first.
     donutPrincipal.style.strokeDashoffset = '0';
     
-    // Interest starts where Principal ends.
-    // Offset needs to be -pPct (negative to move clockwise? or positive?)
-    // standard is: offset = 100 - previous_segment_length (if iterating backwards) or just -previous.
-    // Let's try:
     donutInterest.style.strokeDasharray = `${iPct} ${100 - iPct}`;
     donutInterest.style.strokeDashoffset = `-${pPct}`; 
 
     donutLabel.textContent = Math.round(pPct) + '%';
-    
-    // Store data for tooltip
     donutPrincipal.dataset.val = fmtCurrency(principal);
     donutInterest.dataset.val  = fmtCurrency(interest);
   }
@@ -307,7 +224,7 @@
       el.addEventListener('mouseenter', (e) => {
         const type = el.id === 'donut-principal' ? 'Principal' : 'Interest';
         const val = el.dataset.val;
-        
+
         if(el.id === 'donut-interest') {
           chartTooltip.classList.add('interest');
         } else {
@@ -319,8 +236,6 @@
         chartTooltip.style.opacity = '1';
       });
       el.addEventListener('mousemove', (e) => {
-        const x = e.pageX; // clientX/Y relative to viewport, pageX/Y relative to doc
-        const y = e.pageY;
         chartTooltip.style.left = (e.clientX + 10) + 'px';
         chartTooltip.style.top = (e.clientY - 30) + 'px';
       });
@@ -334,43 +249,49 @@
   // ------------------------------------------------------------------------
   // 6. AMORTIZATION
   // ------------------------------------------------------------------------
-  function generateSchedule(loanAmount, monthlyRate, totalMonths, monthlyPayment) {
+  function generateSchedule(loanAmount, monthlyRate, totalMonths, monthlyPayment, startDateStr) {
     schedule = [];
     let balance = loanAmount;
-    
-    // If 0 interest
     const isZeroInterest = (monthlyRate === 0);
 
-    for(let m=1; m <= totalMonths; m++) {
+    // Date setup
+    let currentY = 0; 
+    let currentM = 0; // 0-based
+    if(startDateStr) {
+      const parts = startDateStr.split('-');
+      if(parts.length===2) {
+        currentY = parseInt(parts[0]);
+        currentM = parseInt(parts[1]) - 1; 
+      }
+    }
+
+    for(let i=1; i <= totalMonths; i++) {
       let interest = isZeroInterest ? 0 : balance * monthlyRate;
       let principal = monthlyPayment - interest;
-      
-      // Last month fix
-      if (m === totalMonths) {
-          // just pay off whatever remainder?
-          // or force balance to 0.
-      }
-      
-      // If payment > balance + interest (early payoff?), usually not in fixed calc
-      if(principal > balance) {
-        principal = balance;
-        // Adjust payment for last month?
-        // monthlyPayment = principal + interest; 
-      }
+      if(principal > balance) principal = balance;
       
       balance -= principal;
       if(balance < 0) balance = 0;
 
+      // Calculate date
+      const d = new Date(currentY, currentM + i - 1, 1);
+      d.setMonth(d.getMonth() + 1); 
+
+      const dateStr = monthNames[d.getMonth()] + " " + d.getFullYear();
+
       schedule.push({
-        month: m,
+        num: i,
+        date: dateStr,
         begBal: balance + principal,
         interest: interest,
         principal: principal,
         endBal: balance
       });
+      
+      if(balance <= 0 && i < totalMonths) break; 
     }
     
-    amTotalMonths.textContent = `Total months: ${totalMonths}`;
+    amTotalMonths.textContent = `Total months: ${schedule.length}`;
     
     if(schedule.length > 0) {
       toggleLink.style.display = 'block';
@@ -383,8 +304,6 @@
 
   function renderSchedule() {
     accRoot.innerHTML = '';
-    
-    // Group by year
     const years = Math.ceil(schedule.length / 12);
     
     for(let y=1; y<=years; y++) {
@@ -392,34 +311,27 @@
       const yearEnd = Math.min(y*12, schedule.length);
       const yearSlice = schedule.slice(yearStart, yearEnd);
       
-      // Calculate Year Totals/End
       const yPrincipal = yearSlice.reduce((sum, item) => sum + item.principal, 0);
       const yInterest  = yearSlice.reduce((sum, item) => sum + item.interest, 0);
       const yEndBal    = yearSlice[yearSlice.length - 1].endBal;
+      const yLabel     = yearSlice[yearSlice.length - 1].date.split(' ')[1]; // Get Year from last item
 
-      // Create Row
       const row = document.createElement('div');
       row.className = 'acc-row';
       row.innerHTML = `
-        <div class="year">
-          <span class="icon">+</span>
-          Year ${y}
-        </div>
+        <div class="year"><span class="icon">+</span> ${yLabel}</div>
         <div class="num">${fmtCurrency(yInterest)}</div>
         <div class="num">${fmtCurrency(yPrincipal)}</div>
         <div class="num">${fmtCurrency(yEndBal)}</div>
       `;
       
-      // Month Panel
       const panel = document.createElement('div');
       panel.className = 'acc-panel';
-      
-      // Table
       let tableHtml = `
         <table class="month-table">
           <thead>
             <tr>
-              <th>Month</th>
+              <th>Date</th>
               <th>Beginning Bal.</th>
               <th>Interest Paid</th>
               <th>Principal Paid</th>
@@ -428,11 +340,10 @@
           </thead>
           <tbody>
       `;
-      
       yearSlice.forEach(item => {
         tableHtml += `
           <tr>
-            <td data-label="Month">${item.month}</td>
+            <td data-label="Date">${item.date}</td>
             <td data-label="Beg.">${fmtCurrency(item.begBal)}</td>
             <td data-label="Int.">${fmtCurrency(item.interest)}</td>
             <td data-label="Prin.">${fmtCurrency(item.principal)}</td>
@@ -440,21 +351,17 @@
           </tr>
         `;
       });
-      
       tableHtml += `</tbody></table>`;
       panel.innerHTML = tableHtml;
 
-      // Toggle Event
       row.addEventListener('click', () => {
         const icon = row.querySelector('.icon');
         if(panel.style.display === 'block'){
           panel.style.display = 'none';
           icon.textContent = '+';
-          row.classList.remove('open');
         } else {
           panel.style.display = 'block';
           icon.textContent = '-';
-          row.classList.add('open');
         }
       });
 
@@ -476,31 +383,21 @@
 
   function exportCSV() {
     if(schedule.length === 0) return;
-    
     let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += "Month,Beginning Balance,Interest,Principal,Ending Balance\n";
-    
+    csvContent += "Date,Beginning Balance,Interest,Principal,Ending Balance\n";
     schedule.forEach(row => {
-      const r = [
-        row.month,
-        row.begBal.toFixed(2),
-        row.interest.toFixed(2),
-        row.principal.toFixed(2),
-        row.endBal.toFixed(2)
-      ];
+      const r = [row.date, row.begBal.toFixed(2), row.interest.toFixed(2), row.principal.toFixed(2), row.endBal.toFixed(2)];
       csvContent += r.join(",") + "\n";
     });
-    
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "auto_loan_amortization.csv");
+    link.setAttribute("download", "personal_loan_amortization.csv");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   }
 
-  // Start
   init();
 
 })();

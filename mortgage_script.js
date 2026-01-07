@@ -352,7 +352,7 @@
     };
 
     // Auto-scroll to result
-    amFull.scrollIntoView({behavior:'smooth'});
+    amFull.scrollIntoView({behavior:'smooth', block: 'start'});
   };
 
   btnReset.onclick = () => {

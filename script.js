@@ -246,8 +246,10 @@
       URL.revokeObjectURL(url);
     };
 
-    // Auto-scroll
-    amFull.scrollIntoView({behavior:'smooth'});
+    // Auto-scroll to Amortization Table
+    if(amFull) {
+      amFull.scrollIntoView({behavior:'smooth', block:'start'});
+    }
   };
 
   btnReset.onclick = () => {
@@ -297,10 +299,18 @@
   function showTooltip(e) {
     const t = e.target;
     if(!t.dataset.label) return; // Not calculated yet
+    
+    // Add logic for specific interest color
+    if(t.dataset.label === "Interest") {
+        tooltip.classList.add('interest');
+    } else {
+        tooltip.classList.remove('interest');
+    }
 
     tooltip.style.display = 'block';
     tooltip.style.opacity = '1';
-    tooltip.style.backgroundColor = t.dataset.color; // Use segment color
+    // Removed direct backgroundColor setting to let CSS class handle it
+    // tooltip.style.backgroundColor = t.dataset.color; 
 
     tooltip.innerHTML = `
       <div style="font-weight:600;font-size:15px;margin-bottom:2px">${t.dataset.label}</div>
