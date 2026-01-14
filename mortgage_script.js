@@ -15,6 +15,10 @@
   const btn = $('cq-calc-btn');
   const btnReset = $('cq-reset-btn');
   const err = $('cq-input-error');
+  
+  // Optional Toggle
+  const toggleOptional = $('cq-toggle-optional');
+  const optionalContainer = $('cq-optional-container');
 
   // Outputs
   const txtMonthlyPI = $('txt-monthly-pi');
@@ -170,10 +174,11 @@
     const map = {};
     rows.forEach(r=>{
       const y = Math.floor((r.month-1)/12)+1;
-      if(!map[y]) map[y]={year:y,principal:0,interest:0,balance:r.end};
+      if(!map[y]) map[y]={year:y,principal:0,interest:0,balance:r.end, beginStart:r.begin};
       map[y].principal += r.principal;
       map[y].interest += r.interest;
       map[y].balance = r.end;
+      // beginStart is already set on first occurrence (Month 1 of year).
     });
     return Object.values(map);
   }
@@ -187,8 +192,9 @@
       row.className="acc-row";
       row.innerHTML=`
         <div class="year"><span class="icon">+</span> Year ${y.year}</div>
-        <div class="num">$${format(y.principal)}</div>
+        <div class="num">$${format(y.beginStart)}</div>
         <div class="num">$${format(y.interest)}</div>
+        <div class="num">$${format(y.principal)}</div>
         <div class="num">$${format(y.balance)}</div>
       `;
 
@@ -353,6 +359,9 @@
 
     // Auto-scroll to result
     amFull.scrollIntoView({behavior:'smooth', block: 'start'});
+
+    // Show Reset Button
+    btnReset.style.display = 'block'; 
   };
 
   btnReset.onclick = () => {
@@ -386,7 +395,13 @@
     
     // Clear Error
     showErr('');
-    updateBtn();
+    
+    // Hide Reset
+    btnReset.style.display = 'none';
+    
+    // Disable Calculate until inputs filled again
+    btn.disabled=true; 
+    btn.classList.remove('active');
   };
 
   toggleLink.onclick=()=>{
@@ -414,11 +429,12 @@
   }
 
   function moveTooltip(e) {
+    // Tooltip position
     const x = e.clientX + 15;
     const y = e.clientY + 15;
-    tooltip.style.transform = `translate(${x}px, ${y}px)`;
-    tooltip.style.left = 0; 
-    tooltip.style.top = 0;
+    tooltip.style.left = x + 'px'; // Fix: need 'px' and set prop directly
+    tooltip.style.top = y + 'px';
+    tooltip.style.transform = 'none'; // Clear transform if setting left/top directly
   }
 
   function hideTooltip() {
@@ -435,5 +451,19 @@
   // Init
   updateBtn();
   accRoot.innerHTML='<div class="small" style="padding:8px;color:#888">Amortization table will appear after calculation.</div>';
+  
+  // Optional Toggle Logic
+  if(toggleOptional) {
+    toggleOptional.addEventListener('change', () => {
+      optionalContainer.style.display = toggleOptional.checked ? 'block' : 'none';
+      // Ensure recalculation or updateBtn might be needed if validation depended on these? 
+      // Currently optional fields aren't strictly required > 0, so updateBtn OK.
+    });
+  }
+  
+  // Initial check
+  if(toggleOptional && toggleOptional.checked) {
+      optionalContainer.style.display = 'block';
+  }
 
 })();

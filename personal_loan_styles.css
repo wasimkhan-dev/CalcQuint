@@ -87,12 +87,23 @@ input[type=number], select, input[type=month]{ /* Added month type */
   cursor: pointer;
   border: 0;
   width: 100%;
-  font-size: 16px;
+  font-size: 14px;
 }
 .cq-btn.active{
   background:var(--primary);
   color:#fff;
   cursor:pointer;
+}
+.cq-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.cq-btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .small{
@@ -380,9 +391,21 @@ input[type=number], select, input[type=month]{ /* Added month type */
   input[type=number], select, input[type=month] { font-size: 16px !important; }
   .donut-svg { width: 150px; height: 150px; }
   
-  .acc-row { display: flex; flex-wrap: wrap; padding: 12px 10px; gap: 8px; border-bottom: 1px solid #eee; }
-  .acc-row .year { width: 100%; font-weight: 500; margin-bottom: 4px; }
-  .acc-row .num { text-align: left; flex: 1; font-size: 13px; color: var(--muted); }
+  .acc-row { 
+    display: flex; 
+    flex-wrap: wrap; 
+    padding: 8px 4px; 
+    gap: 4px; 
+    border-bottom: 1px solid #eee; 
+  }
+  .acc-row .year { width: 100%; font-weight: 500; margin-bottom: 2px; font-size: 12px; }
+  .acc-row .num { 
+    text-align: left; 
+    flex: 1; 
+    font-size: 10px; 
+    color: var(--muted); 
+    white-space: nowrap;
+  }
   
   /* Scrollable Table Container */
   .acc-panel { 
@@ -411,6 +434,13 @@ input[type=number], select, input[type=month]{ /* Added month type */
 
   /* Reset Button */
   .cq-btn-reset { margin-top: 0; width: 100%; }
+
+  .cq-btn-group {
+    flex-direction: column;
+  }
+  .cq-btn-group > button {
+    flex: 1;
+  }
 }
 
 /* Reset Button */

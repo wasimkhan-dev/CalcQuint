@@ -101,10 +101,12 @@
     const map = {};
     rows.forEach(r=>{
       const y = Math.floor((r.month-1)/12)+1;
-      if(!map[y]) map[y]={year:y,principal:0,interest:0,balance:r.end};
+      if(!map[y]) map[y]={year:y,principal:0,interest:0,balance:r.end, begin: r.begin};
       map[y].principal += r.principal;
       map[y].interest += r.interest;
       map[y].balance = r.end;
+      // Note: r.begin is the monthly beginning balance.
+      // For the first month of the year (when map[y] is created), r.begin is correct year begin balance.
     });
     return Object.values(map);
   }
@@ -118,8 +120,9 @@
       row.className="acc-row";
       row.innerHTML=`
         <div class="year"><span class="icon">+</span> Year ${y.year}</div>
-        <div class="num">$${format(y.principal)}</div>
+        <div class="num">$${format(y.begin)}</div>
         <div class="num">$${format(y.interest)}</div>
+        <div class="num">$${format(y.principal)}</div>
         <div class="num">$${format(y.balance)}</div>
       `;
 
@@ -250,6 +253,9 @@
     if(amFull) {
       amFull.scrollIntoView({behavior:'smooth', block:'start'});
     }
+    
+    // Show Reset
+    btnReset.style.display = 'block';
   };
 
   btnReset.onclick = () => {
@@ -278,6 +284,9 @@
     accRoot.innerHTML='';
     
     showErr('');
+    
+    // Hide Reset
+    btnReset.style.display = 'none';
     updateBtn();
   };
 

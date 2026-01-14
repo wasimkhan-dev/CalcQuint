@@ -462,8 +462,8 @@ input[type="number"] {
   .acc-row {
     display: flex;
     flex-wrap: wrap;
-    padding: 12px 10px;
-    gap: 8px;
+    padding: 8px 4px;
+    gap: 4px;
     border-bottom: 1px solid #eee;
   }
 
@@ -471,14 +471,16 @@ input[type="number"] {
   .acc-row .year {
     width: 100%;
     font-weight: 500;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
+    font-size: 12px;
   }
 
   /* Data columns share space */
   .acc-row .num {
     text-align: left;
     flex: 1; /* Distribute evenly */
-    font-size: 13px;
+    font-size: 10px; /* Reduced to fit */
+    white-space: nowrap;
     color: var(--muted);
   }
 

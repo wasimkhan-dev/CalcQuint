@@ -78,26 +78,35 @@
 
       <!-- Optional Fields -->
       
-      <div style="font-size:14px; color:var(--primary); font-weight:500; margin-bottom:1px;">Optional (Annual/Monthly)</div>
+      <div style="margin-bottom: 8px;">
+        <label style="font-size:14px; color:var(--primary); font-weight:500; display:flex; align-items:center; cursor:pointer;">
+          <input type="checkbox" id="cq-toggle-optional" style="width:auto; margin-right:8px;">
+          Optional (Annual/Monthly)
+        </label>
+      </div>
 
-      <div class="extras-row">
-        <div class="half">
-          <label for="cq-property-tax" style="font-size:12px">Property tax ($/yr)</label>
-          <input id="cq-property-tax" type="number" min="0" step="0.01" placeholder="0">
+      <div id="cq-optional-container" style="display:none;">
+        <div class="extras-row">
+          <div class="half">
+            <label for="cq-property-tax" style="font-size:12px">Property tax ($/yr)</label>
+            <input id="cq-property-tax" type="number" min="0" step="0.01" placeholder="0">
+          </div>
+          <div class="half">
+            <label for="cq-home-insurance" style="font-size:12px">Home insurance ($/yr)</label>
+            <input id="cq-home-insurance" type="number" min="0" step="0.01" placeholder="0">
+          </div>
         </div>
-        <div class="half">
-          <label for="cq-home-insurance" style="font-size:12px">Home insurance ($/yr)</label>
-          <input id="cq-home-insurance" type="number" min="0" step="0.01" placeholder="0">
+
+        <div class="cq-field">
+          <label for="cq-hoa" style="font-size:12px">HOA fees ($/mo)</label>
+          <input id="cq-hoa" type="number" min="0" step="0.01" placeholder="0">
         </div>
       </div>
 
-      <div class="cq-field">
-        <label for="cq-hoa" style="font-size:12px">HOA fees ($/mo)</label>
-        <input id="cq-hoa" type="number" min="0" step="0.01" placeholder="0">
+      <div class="cq-btn-group">
+        <button id="cq-calc-btn" class="cq-btn" disabled>Calculate Mortgage</button>
+        <button id="cq-reset-btn" class="cq-btn-reset" style="display:none;">Reset</button>
       </div>
-
-      <button id="cq-calc-btn" class="cq-btn" disabled>Calculate</button>
-      <button id="cq-reset-btn" class="cq-btn-reset">Reset</button>
       <div id="cq-input-error" class="error"></div>
 
     </div>

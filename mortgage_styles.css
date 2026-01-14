@@ -88,11 +88,34 @@ select {
   cursor:pointer;
   border:0;
   width: 100%;
+  font-size: 14px; /* Consistent size */
 }
 .cq-btn.active{
   background:var(--primary);
   color:#fff;
   cursor:pointer;
+}
+.cq-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.cq-btn-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+/* Ensure Reset button fills space or is consistent */
+.cq-btn-reset {
+  width: 100%;
+  margin-top: 0;
+}
+
+/* Optional Container Transition */
+#cq-optional-container {
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
 }
 .small{
   font-size:13px;
@@ -437,8 +460,8 @@ select {
   .acc-row {
     display: flex;
     flex-wrap: wrap;
-    padding: 12px 10px;
-    gap: 8px;
+    padding: 8px 4px;
+    gap: 4px;
     border-bottom: 1px solid #eee;
   }
 
@@ -446,15 +469,17 @@ select {
   .acc-row .year {
     width: 100%;
     font-weight: 500;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
+    font-size: 12px;
   }
 
   /* Data columns share space */
   .acc-row .num {
     text-align: left;
     flex: 1; /* Distribute evenly */
-    font-size: 13px;
+    font-size: 10px;
     color: var(--muted);
+    white-space: nowrap;
   }
   
   /* Add labels via pseudo-elements for clarity if desired, 
@@ -602,4 +627,10 @@ select {
 .cq-btn-reset:hover {
   background: #e0e0e0;
   color: var(--primary);
+}
+
+@media (max-width: 600px) {
+  .cq-btn-group {
+    flex-direction: column;
+  }
 }

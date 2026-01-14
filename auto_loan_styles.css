@@ -443,8 +443,8 @@ select {
   .acc-row {
     display: flex;
     flex-wrap: wrap;
-    padding: 12px 10px;
-    gap: 8px;
+    padding: 8px 4px;
+    gap: 4px;
     border-bottom: 1px solid #eee;
   }
 
@@ -452,15 +452,17 @@ select {
   .acc-row .year {
     width: 100%;
     font-weight: 500;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
+    font-size: 12px;
   }
 
   /* Data columns share space */
   .acc-row .num {
     text-align: left;
     flex: 1; /* Distribute evenly */
-    font-size: 13px;
+    font-size: 10px; /* Reduced to fit */
     color: var(--muted);
+    white-space: nowrap;
   }
 
   /* Add labels via pseudo-elements for clarity if desired, 
@@ -478,8 +480,8 @@ select {
   .month-table {
     display: table;
     width: 100%;
-    table-layout: auto; /* Changed to auto to reduce gaps (Blue line) */
-    font-size: 11px; /* Readable small font */
+    table-layout: auto; 
+    font-size: 8px; /* Requested 8px */
   }
 
   .month-table thead {
@@ -501,10 +503,11 @@ select {
   .month-table th,
   .month-table td {
     display: table-cell;
-    padding: 6px 4px;
+    padding: 5px 2px; /* Tightened */
     border-bottom: 1px solid #eee;
     text-align: right;
-    white-space: nowrap;
+    white-space: normal;
+    word-break: break-word; /* Allow wrap if needed */
     color: var(--primary);
     width: auto;
   }
@@ -512,14 +515,14 @@ select {
   .month-table th {
     font-weight: 600;
     color: var(--muted);
-    font-size: 10px;
+    font-size: 8px; /* Requested 8px */
     text-transform: uppercase;
   }
 
   /* Reset Card Styles */
   .month-table td[data-label="Month"] {
     font-weight: 400;
-    font-size: 11px;
+    font-size: 8px; /* Requested 8px */
     color: var(--primary);
     padding-bottom: 6px;
     border: none; /* Reset */
@@ -541,9 +544,9 @@ select {
 
   /* Shorten Headers to fit */
   .month-table th {
-    font-size: 9px; /* Tiny headers */
-    padding: 6px 1px;
-    letter-spacing: -0.5px; /* Squeeze text */
+    font-size: 8px; 
+    padding: 5px 1px;
+    letter-spacing: -0.5px; 
   }
 
   /* Trick to replace text with shorter versions on mobile */
@@ -585,21 +588,21 @@ select {
   /* Month Column Width */
   .month-table th:nth-child(1),
   .month-table td:nth-child(1) {
-    width: 60px; /* Increased from 20px to fix spacing */
+    width: 50px; /* Reduced */
     text-align: left;
-    padding-left: 4px; /* Added slight padding */
+    padding-left: 2px;
   }
 
   /* Add space between Principal and End columns */
   .month-table th:nth-child(4),
   .month-table td:nth-child(4) {
-    padding-right: 15px;
+    padding-right: 5px; /* Reduced */
   }
 
   /* Tweak Data cells */
   .month-table td {
-    font-size: 10px; /* Small but hopefully readable */
-    padding: 6px 1px;
+    font-size: 8px; /* Requested 8px */
+    padding: 5px 1px;
     letter-spacing: -0.5px;
   }
 

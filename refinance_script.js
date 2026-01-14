@@ -58,7 +58,16 @@
   // Init
   function init() {
     elCalcBtn.addEventListener('click', handleInput);
-    elCalcBtn.classList.add('active'); 
+    // elCalcBtn.classList.add('active'); // Removed: Initially inactive
+
+    // Disable initially
+    elCalcBtn.disabled = true;
+
+    // Add input listeners for validation
+    const inputs = [elCurBal, elCurPmt, elCurRate, elNewTerm, elNewRate, elPoints, elCosts, elCashOut];
+    inputs.forEach(el => {
+      el.addEventListener('input', checkForm);
+    });
 
     // Amortization toggle
     toggleLink.addEventListener('click', () => {
@@ -77,8 +86,27 @@
     // Tooltip hover
     setupChartTooltips();
 
-    readInputs();
-    calculate(false); // don't scroll on init
+    // readInputs(); // Remove initial read/calc
+    // calculate(false); // Remove initial calculation
+  }
+
+  function checkForm() {
+    // Check if required fields have values
+    // Required: Balance, Pmt, Rate, New Term, New Rate
+    const hasValues = (
+      elCurBal.value.trim() !== '' &&
+      elCurPmt.value.trim() !== '' &&
+      elCurRate.value.trim() !== '' &&
+      elNewTerm.value.trim() !== '' &&
+      elNewRate.value.trim() !== ''
+    );
+
+    elCalcBtn.disabled = !hasValues;
+    if(hasValues) {
+      elCalcBtn.classList.add('active');
+    } else {
+      elCalcBtn.classList.remove('active');
+    }
   }
 
   // ------------------------------------------------------------------------
@@ -87,6 +115,7 @@
   function handleInput() {
     readInputs();
     calculate(true); // Scroll on click
+    elResetBtn.style.display = 'block'; // Show reset button
   }
 
   function readInputs() {
@@ -245,6 +274,12 @@
      toggleLink.textContent = 'View Amortization Table';
      csvCtas.style.display = 'none';
      exportBtn.style.display = 'none';
+     
+     // Hide reset button
+     elResetBtn.style.display = 'none';
+     // Disable calc
+     elCalcBtn.disabled = true;
+     elCalcBtn.classList.remove('active');
   });
 
   function showError(msg) {
@@ -367,11 +402,13 @@
       const yPrincipal = yearSlice.reduce((sum, item) => sum + item.principal, 0);
       const yInterest  = yearSlice.reduce((sum, item) => sum + item.interest, 0);
       const yEndBal    = yearSlice[yearSlice.length - 1].endBal;
+      const yBegBal    = yearSlice[0].begBal;
 
       const row = document.createElement('div');
       row.className = 'acc-row';
       row.innerHTML = `
         <div class="year"><span class="icon">+</span> Year ${y}</div>
+        <div class="num">${fmtCurrency(yBegBal)}</div>
         <div class="num">${fmtCurrency(yInterest)}</div>
         <div class="num">${fmtCurrency(yPrincipal)}</div>
         <div class="num">${fmtCurrency(yEndBal)}</div>

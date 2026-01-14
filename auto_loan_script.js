@@ -65,7 +65,14 @@
 
     // Button: Calculate on click
     elCalcBtn.addEventListener('click', handleInput);
-    elCalcBtn.classList.add('active'); // Make sure button is enabled visually
+    
+    // Validation Listeners
+    [elPrice, elTerm, elRate].forEach(inp => {
+       if(inp) inp.addEventListener('input', checkValidity);
+    });
+    
+    // Initial Valid Check
+    checkValidity();
 
     // Amortization toggle
     toggleLink.addEventListener('click', () => {
@@ -107,6 +114,24 @@
     state.tradeOwed  = parseFloat(elTradeOwed.value) || 0;
     state.taxRate    = parseFloat(elTaxRate.value) || 0;
     state.fees       = parseFloat(elFees.value) || 0;
+  }
+  
+  function checkValidity() {
+    const p = parseFloat(elPrice.value);
+    const t = parseFloat(elTerm.value);
+    const r = parseFloat(elRate.value);
+
+    // Basic check: Price > 0, Term > 0
+    // Rate usually >= 0 (0% financing exists) available
+    const valid = (p > 0) && (t > 0) && (!isNaN(r) && r >= 0);
+
+    if (valid) {
+       elCalcBtn.disabled = false;
+       elCalcBtn.classList.add('active');
+    } else {
+       elCalcBtn.disabled = true;
+       elCalcBtn.classList.remove('active');
+    }
   }
 
   // ------------------------------------------------------------------------
@@ -210,6 +235,9 @@
       toggleLink.textContent = 'Hide Amortization Table';
     }
     amFullDiv.scrollIntoView({behavior: 'smooth'});
+    
+    // Show Reset
+    elResetBtn.style.display = 'block';
   }
 
   elResetBtn.addEventListener('click', () => {
@@ -230,6 +258,11 @@
      toggleLink.textContent = 'View Amortization Table';
      csvCtas.style.display = 'none';
      exportBtn.style.display = 'none'; // or csvCtas hides it
+     
+     // Hide Reset Button
+     elResetBtn.style.display = 'none';
+     // Disable Calculate
+     checkValidity();
   });
 
   function showError(msg) {
@@ -396,6 +429,7 @@
       const yPrincipal = yearSlice.reduce((sum, item) => sum + item.principal, 0);
       const yInterest  = yearSlice.reduce((sum, item) => sum + item.interest, 0);
       const yEndBal    = yearSlice[yearSlice.length - 1].endBal;
+      const yBegBal    = yearSlice[0].begBal;
 
       // Create Row
       const row = document.createElement('div');
@@ -405,6 +439,7 @@
           <span class="icon">+</span>
           Year ${y}
         </div>
+        <div class="num">${fmtCurrency(yBegBal)}</div>
         <div class="num">${fmtCurrency(yInterest)}</div>
         <div class="num">${fmtCurrency(yPrincipal)}</div>
         <div class="num">${fmtCurrency(yEndBal)}</div>

@@ -55,9 +55,7 @@
         </div>
       </div>
 
-      <div style="margin-top: 20px; margin-bottom: 12px; font-weight: 600; font-size: 16px; color: var(--primary);">
-        Loan Term
-      </div>
+
 
       <div class="extras-row">
         <div class="half">
@@ -84,8 +82,10 @@
         <input id="cq-start-date" type="month">
       </div>
 
-      <button id="cq-calc-btn" class="cq-btn">Calculate Personal Loan</button>
-      <button id="cq-reset-btn" class="cq-btn-reset">Reset</button>
+      <div class="cq-btn-group">
+        <button id="cq-calc-btn" class="cq-btn" disabled>Calculate Personal Loan</button>
+        <button id="cq-reset-btn" class="cq-btn-reset" style="display:none;">Reset</button>
+      </div>
       <div id="cq-input-error" class="error"></div>
 
     </div>

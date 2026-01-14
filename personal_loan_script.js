@@ -59,7 +59,11 @@
     state.startDate = elStartDate.value;
 
     elCalcBtn.addEventListener('click', handleInput);
-    elCalcBtn.classList.add('active'); 
+    
+    // Validation listeners
+    [elLoanAmount, elRate, elYears, elMonths].forEach(el => {
+      el.addEventListener('input', checkValidity);
+    });
 
     // Amortization toggle
     toggleLink.addEventListener('click', () => {
@@ -78,8 +82,9 @@
     // Tooltip hover
     setupChartTooltips();
 
-    readInputs();
-    calculate(false);
+    // Initial check
+    checkValidity();
+    // Do NOT run calculate(false) automatically on load anymore
   }
 
   // ------------------------------------------------------------------------
@@ -88,6 +93,26 @@
   function handleInput() {
     readInputs();
     calculate(true);
+  }
+
+  function checkValidity() {
+    const amt = parseFloat(elLoanAmount.value);
+    const rt  = parseFloat(elRate.value);
+    const yrs = parseFloat(elYears.value);
+    const mos = parseFloat(elMonths.value);
+
+    // Basic validity: Amount > 0, Rate >= 0, and at least some Term (Years or Months > 0)
+    const hasAmount = !isNaN(amt) && amt > 0;
+    const hasRate   = !isNaN(rt)  && rt >= 0;
+    const hasTerm   = (!isNaN(yrs) && yrs > 0) || (!isNaN(mos) && mos > 0);
+
+    if (hasAmount && hasRate && hasTerm) {
+      elCalcBtn.disabled = false;
+      elCalcBtn.classList.add('active');
+    } else {
+      elCalcBtn.disabled = true;
+      elCalcBtn.classList.remove('active');
+    }
   }
 
   function readInputs() {
@@ -161,9 +186,11 @@
        amFullDiv.style.display = 'block';
        toggleLink.textContent = 'Hide Amortization Table';
        amFullDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else if (shouldScroll && rightPanel) {
        rightPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+
+    // Show Reset Button
+    elResetBtn.style.display = 'block'; // or 'inline-block' depending on CSS, but block/flex handles it
   }
 
   elResetBtn.addEventListener('click', () => {
@@ -177,6 +204,12 @@
      amFullDiv.style.display = 'none';
      toggleLink.textContent = 'View Amortization Table';
      csvCtas.style.display = 'none';
+
+     // Hide Reset Button & Disable Calculate
+     elResetBtn.style.display = 'none';
+     elCalcBtn.disabled = true;
+     elCalcBtn.classList.remove('active');
+     checkValidity(); // update state
   });
 
   function showError(msg) {
@@ -320,6 +353,7 @@
       row.className = 'acc-row';
       row.innerHTML = `
         <div class="year"><span class="icon">+</span> ${yLabel}</div>
+        <div class="num">${fmtCurrency(yearSlice[0].begBal)}</div>
         <div class="num">${fmtCurrency(yInterest)}</div>
         <div class="num">${fmtCurrency(yPrincipal)}</div>
         <div class="num">${fmtCurrency(yEndBal)}</div>

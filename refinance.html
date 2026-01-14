@@ -31,13 +31,13 @@
 <!-- Copy from here for embedding -->
 <div id="cq-widget-refinance">
 
- 
+  
   <div class="cq-top">
 
     <!-- LEFT PANEL -->
     <div class="cq-col cq-left">
 
-      <div style="margin-bottom: 12px; font-weight: 600; font-size: 16px; color: var(--primary);">
+      <div class="section-title">
         Current Loan
       </div>
 
@@ -66,8 +66,8 @@
         </div>
       </div>
 
-      <div style="margin-top: 20px; margin-bottom: 12px; font-weight: 600; font-size: 16px; color: var(--primary);">
-        New Loan
+      <div class="section-title mt-secondary">
+        Refinance Loan
       </div>
 
       <div class="extras-row">
@@ -112,8 +112,10 @@
         <input id="cq-cash-out" type="number" min="0" step="0.01" placeholder="0">
       </div>
 
-      <button id="cq-calc-btn" class="cq-btn">Calculate Refinance</button>
-      <button id="cq-reset-btn" class="cq-btn-reset">Reset</button>
+      <div class="cq-action-row">
+        <button id="cq-calc-btn" class="cq-btn">Calculate Refinance</button>
+        <button id="cq-reset-btn" class="cq-btn-reset" style="display: none;">Reset</button>
+      </div>
       <div id="cq-input-error" class="error"></div>
 
     </div>
