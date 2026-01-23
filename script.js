@@ -32,7 +32,13 @@
   let globalRows = [];
   const ABS_MAX = 100000;
 
-  function isFilled(id){ return $(id).value.trim() !== ''; }
+  function isFilled(id){ 
+    const val = $(id).value.trim();
+    if(val === '') return false;
+    const num = parseFloat(val);
+    if(id === 'cq-rate') return !isNaN(num) && num >= 0;
+    return !isNaN(num) && num > 0;
+  }
   function allFilled(){ return required.every(isFilled); }
 
   function updateBtn(){
@@ -298,6 +304,9 @@
 
   updateBtn();
   accRoot.innerHTML='<div class="small" style="padding:8px;color:#888">Amortization table will appear after calculation.</div>';
+  
+  if(toggleLink) toggleLink.style.display = 'none';
+  if(csvCtas) csvCtas.style.display = 'none';
 
   /* ----------------------
      Tooltip Logic

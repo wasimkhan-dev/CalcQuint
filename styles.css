@@ -60,7 +60,7 @@
 label {
   display: block;
   font-size: 13px;
-  font-weight: 400;
+  font-weight: 300;
   margin-bottom: 6px; /* User requested 6px */
   line-height: 1.4;
 }
@@ -91,6 +91,12 @@ input[type="number"] {
   color: #fff;
   cursor: pointer;
 }
+.cq-btn:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
 .small {
   font-size: 13px;
   color: var(--muted);
@@ -133,7 +139,6 @@ input[type="number"] {
 /* ... */
 
 .cq-btn-reset {
-  padding: 8px; /* Match input padding for consistency if preferred, user didn't specify button padding but let's keep it proportionate or keep previous? User didn't specify button padding explicitly, but input padding is 8px. It's safer to keep buttons clickable, but usually buttons match input height. Let's start with 10px or keep 12px? The user request said "Input Padding". I will assume buttons should stay larger for clickability, or maybe match. Let's keep buttons at 12px for now unless asked, or reduce to 10px to look balanced. I will keep 12px for buttons as user didn't request button change. Wait, reset button matches input usually. Let's make reset button 8px+border? or 10px. I'll stick to 10px for buttons to be safe, or leave them. User only said Input Padding. I'll leave buttons at 12px or 10px. Actually, usually inputs and buttons should align. If input padding is 8px, height is approx 15+16+2 = 33px. If button padding is 12px, height is ~40+. Let's reduce button padding to 10px to be closer but distinct, or maybe 8px? I will leave buttons alone for now, or maybe Set to 10px. The user was very specific about inputs. I'll change reset button to match input padding convention if it looks like an input, but it's a button. I will leave buttons (cq-btn and cq-btn-reset) at 12px unless it looks weird. Actually, let's keep them at 10px to be slightly smaller than 12px but bigger than 8px? No, let's just stick to the requested changes. */
   padding: 10px; /* Reducing slightly to balance with smaller inputs, but not as small as 8px */
   border-radius: 8px;
   background: var(--light-bg);
@@ -159,6 +164,12 @@ input[type="number"] {
 .kpi-divider {
   border-top: 1px solid #eee;
   margin: 12px 0;
+}
+
+.optional-divider {
+  border-top: 1px solid #eee;
+  margin: 8px 0 8px 0;
+  position: relative;
 }
 
 /* ------------------------ */
@@ -644,3 +655,6 @@ input[type="number"] {
   background: #e0e0e0; /* Darker grey on hover */
   color: var(--primary);
 }
+
+.cq-btn-group { display: flex; gap: 10px; width: 100%; }
+@media (max-width: 600px) { .cq-btn-group { flex-direction: column; } }

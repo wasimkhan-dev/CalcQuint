@@ -52,8 +52,20 @@
   
   // Required fields
   function checkRequired() {
-    return isFilled(homePriceIn) && isFilled(termIn) && isFilled(rateIn) && 
-           (isFilled(downAmtIn) || isFilled(downPctIn));
+    const price = getNum(homePriceIn);
+    const term = getNum(termIn);
+    const rate = getNum(rateIn);
+    // Note: getNum returns 0 if empty/NaN.
+    // We need strict positive for Price & Term, Non-negative for Rate.
+    // Also check if inputs are actually filled strings to avoid "0" being valid if user typed "0"?
+    // But "0" term is invalid. "0" price is invalid.
+    // So getNum check > 0 is sufficient for Price/Term.
+    // Rate can be 0. So strict check against empty string needed or just isFilled.
+    // Let's use isFilled AND validation.
+    
+    return isFilled(homePriceIn) && price > 0 &&
+           isFilled(termIn) && term > 0 &&
+           isFilled(rateIn) && rate >= 0;
   }
 
   function updateBtn(){
@@ -465,5 +477,9 @@
   if(toggleOptional && toggleOptional.checked) {
       optionalContainer.style.display = 'block';
   }
+  
+  // Hide Amortization Link Initially
+  if(toggleLink) toggleLink.style.display = 'none';
+  if(csvCtas) csvCtas.style.display = 'none';
 
 })();

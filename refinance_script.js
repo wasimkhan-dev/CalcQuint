@@ -88,17 +88,27 @@
 
     // readInputs(); // Remove initial read/calc
     // calculate(false); // Remove initial calculation
+    if(toggleLink) toggleLink.style.display = 'none';
+    if(csvCtas) csvCtas.style.display = 'none';
+    if(exportBtn) exportBtn.style.display = 'none';
   }
 
   function checkForm() {
     // Check if required fields have values
     // Required: Balance, Pmt, Rate, New Term, New Rate
+    const curBal = parseFloat(elCurBal.value);
+    const curPmt = parseFloat(elCurPmt.value);
+    const curRate = parseFloat(elCurRate.value);
+    const newTerm = parseFloat(elNewTerm.value);
+    const newRate = parseFloat(elNewRate.value);
+
+    // Strict validation: Amounts > 0, Rates >= 0
     const hasValues = (
-      elCurBal.value.trim() !== '' &&
-      elCurPmt.value.trim() !== '' &&
-      elCurRate.value.trim() !== '' &&
-      elNewTerm.value.trim() !== '' &&
-      elNewRate.value.trim() !== ''
+      !isNaN(curBal) && curBal > 0 &&
+      !isNaN(curPmt) && curPmt > 0 &&
+      !isNaN(curRate) && curRate >= 0 &&
+      !isNaN(newTerm) && newTerm > 0 &&
+      !isNaN(newRate) && newRate >= 0
     );
 
     elCalcBtn.disabled = !hasValues;
@@ -271,7 +281,7 @@
      resetOutputs();
      elError.style.display = 'none';
      amFullDiv.style.display = 'none';
-     toggleLink.textContent = 'View Amortization Table';
+     toggleLink.style.display = 'none';
      csvCtas.style.display = 'none';
      exportBtn.style.display = 'none';
      

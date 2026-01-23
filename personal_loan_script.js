@@ -85,6 +85,8 @@
     // Initial check
     checkValidity();
     // Do NOT run calculate(false) automatically on load anymore
+    if(toggleLink) toggleLink.style.display = 'none';
+    if(csvCtas) csvCtas.style.display = 'none';
   }
 
   // ------------------------------------------------------------------------
@@ -202,7 +204,7 @@
      resetOutputs();
      elError.style.display = 'none';
      amFullDiv.style.display = 'none';
-     toggleLink.textContent = 'View Amortization Table';
+     toggleLink.style.display = 'none';
      csvCtas.style.display = 'none';
 
      // Hide Reset Button & Disable Calculate

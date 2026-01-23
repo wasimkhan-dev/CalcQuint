@@ -21,12 +21,6 @@
 /* ------------------------ */
 /* Layout Panels */
 /* ------------------------ */
-/* ------------------------ */
-/* Layout Panels */
-/* ------------------------ */
-/* ------------------------ */
-/* Layout Panels */
-/* ------------------------ */
 .cq-top {
   display: flex;
   gap: 16px; /* User requested 16px */
@@ -60,7 +54,7 @@
 label {
   display: block;
   font-size: 13px;
-  font-weight: 400;
+  font-weight: 300;
   margin-bottom: 6px; /* User requested 6px */
   line-height: 1.4;
 }
@@ -69,8 +63,7 @@ label {
   display: flex;
   flex-direction: column;
 }
-input[type="number"],
-select {
+input[type="number"], select {
   width: 100%;
   padding: 8px; /* User requested 8px */
   border: 1px solid #dcdce6;
@@ -80,7 +73,7 @@ select {
   background-color: white;
 }
 .cq-btn {
-  padding: 10px; /* Mild adjustment */
+  padding: 10px;
   border-radius: 8px;
   background: var(--primary);
   color: #fff;
@@ -92,6 +85,11 @@ select {
   background: var(--primary);
   color: #fff;
   cursor: pointer;
+}
+.cq-btn:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 .small {
   font-size: 13px;
@@ -115,7 +113,7 @@ select {
   align-items: center;
   gap: 6px;
   margin-bottom: 0;
-  white-space: nowrap;
+  white-space: nowrap; 
 }
 .adv-info {
   font-size: 12px;
@@ -126,10 +124,20 @@ select {
 .extras-row {
   display: flex;
   gap: 8px; /* User requested 8px */
-  margin-bottom: 0;
+  margin-bottom: 0; 
 }
 .extras-row .half {
   flex: 1;
+}
+
+.cq-btn-reset {
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--light-bg);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  width: 100%;
 }
 
 /* ------------------------ */
@@ -150,6 +158,12 @@ select {
   margin: 12px 0;
 }
 
+.optional-divider {
+  border-top: 1px solid #eee;
+  margin: 0 0 5px 0;
+  position: relative;
+}
+
 /* ------------------------ */
 /* Donut Chart */
 /* ------------------------ */
@@ -164,14 +178,16 @@ select {
   height: 180px;
 }
 
+/* Tooltip */
 .chart-tooltip {
   position: fixed;
   display: none;
-  background: rgba(30, 30, 47, 0.95);
+  background: rgba(30, 30, 47, 0.95); /* Default Dark */
   color: #fff;
   padding: 8px 12px;
   border-radius: 6px;
   font-size: 14px;
+  font-weight: 500;
   pointer-events: none;
   z-index: 1000;
   white-space: nowrap;
@@ -180,7 +196,7 @@ select {
 }
 
 .chart-tooltip.interest {
-  background: var(--accent);
+  background: var(--accent); /* Yellow */
   color: #fff;
 }
 
@@ -230,7 +246,7 @@ select {
 }
 
 /* --------------------------------------------------- */
-/* 100% PERFECT COLUMN ALIGNMENT (FINAL FIX APPLIED)  */
+/* 100% PERFECT COLUMN ALIGNMENT */
 /* --------------------------------------------------- */
 
 /* YEAR ROW = 5 COLUMNS (Matches table layout exactly) */
@@ -242,9 +258,15 @@ select {
   border-bottom: 1px solid #f1f3f8;
   cursor: pointer;
   background: #fff;
+  transition: background 0.2s;
 }
 .acc-row:hover {
-  background: #f9f9f9;
+  background: #fcfcfc;
+}
+.acc-row:hover .year,
+.acc-row:hover .num,
+.acc-row:hover .icon {
+   color: var(--accent);
 }
 .acc-row .year {
   font-weight: 500;
@@ -254,16 +276,16 @@ select {
   gap: 8px;
   transition: color 0.2s ease;
 }
-.acc-row:hover .year {
-  color: var(--accent);
-}
 .acc-row .icon {
   font-size: 38px; /* Increased size */
   line-height: 1;
   font-weight: 300;
+  transition: color 0.2s;
 }
 .acc-row .num {
   text-align: right;
+  color: var(--primary);
+  transition: color 0.2s;
 }
 
 /* MONTH PANELS */
@@ -401,7 +423,7 @@ select {
 }
 
 /* --------------------------------------------------- */
-/* MOBILE RESPONSIVENESS (ADDED) */
+/* MOBILE RESPONSIVENESS */
 /* --------------------------------------------------- */
 
 @media (max-width: 600px) {
@@ -461,27 +483,23 @@ select {
     text-align: left;
     flex: 1; /* Distribute evenly */
     font-size: 10px; /* Reduced to fit */
-    color: var(--muted);
     white-space: nowrap;
+    color: var(--muted);
   }
-
-  /* Add labels via pseudo-elements for clarity if desired, 
-     or just let them sit. Let's keep it clean: 
-     Principal | Interest | Balance 
-  */
 
   /* Month Table - Compact Table (No Scroll, Reader Friendly) */
   .acc-panel {
-    overflow-x: hidden; /* No scroll */
+    overflow-x: auto; /* Scrollable */
     margin: 0;
     padding: 10px 0 0;
+    -webkit-overflow-scrolling: touch;
   }
 
   .month-table {
     display: table;
     width: 100%;
-    table-layout: auto; 
-    font-size: 8px; /* Requested 8px */
+    min-width: 0;
+    table-layout: auto; /* Changed to auto to reduce gaps (Blue line) */
   }
 
   .month-table thead {
@@ -503,26 +521,27 @@ select {
   .month-table th,
   .month-table td {
     display: table-cell;
-    padding: 5px 2px; /* Tightened */
+    padding: 5px 2px;
     border-bottom: 1px solid #eee;
     text-align: right;
     white-space: normal;
-    word-break: break-word; /* Allow wrap if needed */
     color: var(--primary);
     width: auto;
+    font-size: 8px; /* 8px font request */
+    word-break: break-word;
   }
 
   .month-table th {
     font-weight: 600;
     color: var(--muted);
-    font-size: 8px; /* Requested 8px */
+    font-size: 9px;
     text-transform: uppercase;
   }
 
   /* Reset Card Styles */
   .month-table td[data-label="Month"] {
     font-weight: 400;
-    font-size: 8px; /* Requested 8px */
+    font-size: 8px;
     color: var(--primary);
     padding-bottom: 6px;
     border: none; /* Reset */
@@ -544,9 +563,9 @@ select {
 
   /* Shorten Headers to fit */
   .month-table th {
-    font-size: 8px; 
-    padding: 5px 1px;
-    letter-spacing: -0.5px; 
+    font-size: 9px; /* Tiny headers */
+    padding: 6px 1px;
+    letter-spacing: -0.5px; /* Squeeze text */
   }
 
   /* Trick to replace text with shorter versions on mobile */
@@ -588,22 +607,17 @@ select {
   /* Month Column Width */
   .month-table th:nth-child(1),
   .month-table td:nth-child(1) {
-    width: 50px; /* Reduced */
+    width: auto;
+    min-width: 40px;
+    max-width: 50px;
     text-align: left;
-    padding-left: 2px;
+    padding-left: 4px; /* Added slight padding */
   }
 
   /* Add space between Principal and End columns */
   .month-table th:nth-child(4),
   .month-table td:nth-child(4) {
-    padding-right: 5px; /* Reduced */
-  }
-
-  /* Tweak Data cells */
-  .month-table td {
-    font-size: 8px; /* Requested 8px */
-    padding: 5px 1px;
-    letter-spacing: -0.5px;
+    padding-right: 15px;
   }
 
   /* Adjust extras row to stack */
@@ -613,18 +627,5 @@ select {
   }
 }
 
-/* Reset Button */
-.cq-btn-reset {
-  padding: 10px;
-  border-radius: 8px;
-  background: var(--light-bg);
-  color: var(--muted);
-  border: 1px solid var(--border);
-  cursor: pointer;
-  margin-top: 0;
-  width: 100%;
-}
-.cq-btn-reset:hover {
-  background: #e0e0e0;
-  color: var(--primary);
-}
+.cq-btn-group { display: flex; gap: 10px; width: 100%; }
+@media (max-width: 600px) { .cq-btn-group { flex-direction: column; } }

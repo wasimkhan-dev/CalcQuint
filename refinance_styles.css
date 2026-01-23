@@ -21,12 +21,6 @@
 /* ------------------------ */
 /* Layout Panels */
 /* ------------------------ */
-/* ------------------------ */
-/* Layout Panels */
-/* ------------------------ */
-/* ------------------------ */
-/* Layout Panels */
-/* ------------------------ */
 .cq-top {
   display: flex;
   gap: 16px; /* User requested 16px */
@@ -60,7 +54,7 @@
 label {
   display: block;
   font-size: 13px;
-  font-weight: 400;
+  font-weight: 300;
   margin-bottom: 6px; /* User requested 6px */
   line-height: 1.4;
 }
@@ -69,8 +63,7 @@ label {
   display: flex;
   flex-direction: column;
 }
-input[type="number"],
-select {
+input[type="number"], select {
   width: 100%;
   padding: 8px; /* User requested 8px */
   border: 1px solid #dcdce6;
@@ -80,21 +73,24 @@ select {
   background-color: white;
 }
 .cq-btn {
-  padding: 10px; /* Mild adjustment */
+  padding: 10px;
   border-radius: 8px;
   background: var(--primary);
   color: #fff;
   cursor: pointer;
   border: 0;
   width: 100%;
-  font-size: 16px;
 }
 .cq-btn.active {
   background: var(--primary);
   color: #fff;
   cursor: pointer;
 }
-
+.cq-btn:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
 .small {
   font-size: 13px;
   color: var(--muted);
@@ -106,13 +102,42 @@ select {
   display: none;
 }
 
+.advanced-row {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.advanced-row label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 0;
+  white-space: nowrap; 
+}
+.adv-info {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.2;
+}
+
 .extras-row {
   display: flex;
   gap: 8px; /* User requested 8px */
-  margin-bottom: 0;
+  margin-bottom: 0; 
 }
 .extras-row .half {
   flex: 1;
+}
+
+.cq-btn-reset {
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--light-bg);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  width: 100%;
 }
 
 /* ------------------------ */
@@ -125,12 +150,18 @@ select {
 }
 /* Target the value span (2nd child) */
 .kpi-line span:last-child {
-  font-weight: 500;
+  font-weight: 500; /* Requested 500 */
 }
 
 .kpi-divider {
   border-top: 1px solid #eee;
   margin: 12px 0;
+}
+
+.optional-divider {
+  border-top: 1px solid #eee;
+  margin: 8px 0 8px 0;
+  position: relative;
 }
 
 /* ------------------------ */
@@ -214,10 +245,14 @@ select {
   color: var(--muted);
 }
 
-/* Amortization Table Styles */
+/* --------------------------------------------------- */
+/* 100% PERFECT COLUMN ALIGNMENT */
+/* --------------------------------------------------- */
+
+/* YEAR ROW = 5 COLUMNS (Matches table layout exactly) */
 .acc-row {
   display: grid;
-  grid-template-columns: 150px 1fr 1fr 1fr 1fr;
+  grid-template-columns: 150px 1fr 1fr 1fr 1fr; /* EXACT match */
   padding: 10px 12px;
   align-items: center;
   border-bottom: 1px solid #f1f3f8;
@@ -231,9 +266,8 @@ select {
 .acc-row:hover .year,
 .acc-row:hover .num,
 .acc-row:hover .icon {
-  color: var(--accent);
+   color: var(--accent);
 }
-
 .acc-row .year {
   font-weight: 500;
   color: var(--primary);
@@ -243,7 +277,7 @@ select {
   transition: color 0.2s ease;
 }
 .acc-row .icon {
-  font-size: 38px;
+  font-size: 38px; /* Increased size */
   line-height: 1;
   font-weight: 300;
   transition: color 0.2s;
@@ -254,25 +288,31 @@ select {
   transition: color 0.2s;
 }
 
+/* MONTH PANELS */
 .acc-panel {
   display: none;
   padding: 10px 0 18px;
 }
 
+/* ------------------------ */
+/* Month Table */
+/* ------------------------ */
 .month-table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;
+  table-layout: fixed; /* REQUIRED to align with grid */
 }
 
+/* Match 5 column design */
 .month-table th:nth-child(1),
 .month-table td:nth-child(1) {
-  width: 150px;
+  width: 150px; /* matches Year column */
   text-align: left;
 }
+
 .month-table th:nth-child(n + 2),
 .month-table td:nth-child(n + 2) {
-  width: 1fr;
+  width: 1fr; /* evenly distributed numeric columns */
   text-align: right;
 }
 
@@ -286,8 +326,13 @@ select {
   color: var(--muted);
   text-align: left;
 }
+.month-table td.left {
+  text-align: left;
+}
 
+/* ------------------------ */
 /* CSV Section */
+/* ------------------------ */
 .btn-primary {
   background: var(--accent);
   padding: 8px 14px;
@@ -302,7 +347,9 @@ select {
   justify-content: flex-end;
 }
 
-/* Tooltips */
+/* ------------------------ */
+/* Tooltips (Question Mark) */
+/* ------------------------ */
 .cq-tooltip-icon {
   display: inline-flex;
   align-items: center;
@@ -325,10 +372,11 @@ select {
   color: #fff;
 }
 
+/* Tooltip Popup */
 .cq-tooltip-icon::after {
   content: attr(data-tip);
   position: absolute;
-  bottom: 125%;
+  bottom: 125%; /* Above the icon */
   left: 50%;
   transform: translateX(-50%);
   background: rgba(30, 30, 47, 0.95);
@@ -354,10 +402,11 @@ select {
   visibility: visible;
 }
 
+/* Small arrow */
 .cq-tooltip-icon::before {
   content: "";
   position: absolute;
-  bottom: 85%;
+  bottom: 85%; /* Just below the popup */
   left: 50%;
   margin-left: -5px;
   border-width: 5px;
@@ -376,27 +425,43 @@ select {
 /* --------------------------------------------------- */
 /* MOBILE RESPONSIVENESS */
 /* --------------------------------------------------- */
+
 @media (max-width: 600px) {
+  /* Global Container Spacing */
   #cq-widget-refinance {
     padding: 0;
   }
+
+  /* Stack Panels */
   .cq-top {
     flex-direction: column;
     gap: 16px;
   }
+
+  /* Panel Padding */
   .cq-left,
   .cq-right {
     padding: 16px;
   }
+
+  /* Prevent iOS Zoom on focus */
   input[type="number"],
-  select {
+  select,
+  textarea {
     font-size: 16px !important;
   }
+
+  /* Adjust Donut Chart Size */
   .donut-svg {
     width: 150px;
     height: 150px;
   }
 
+  /* --------------------------------- */
+  /* Responsive Amortization Schedule */
+  /* --------------------------------- */
+
+  /* Change Grid to Flex/Block for Rows */
   .acc-row {
     display: flex;
     flex-wrap: wrap;
@@ -404,77 +469,166 @@ select {
     gap: 4px;
     border-bottom: 1px solid #eee;
   }
+
+  /* Year always full width on top */
   .acc-row .year {
     width: 100%;
     font-weight: 500;
     margin-bottom: 2px;
     font-size: 12px;
   }
+
+  /* Data columns share space */
   .acc-row .num {
     text-align: left;
-    flex: 1;
-    font-size: 10px;
-    color: var(--muted);
+    flex: 1; /* Distribute evenly */
+    font-size: 10px; /* Reduced to fit */
     white-space: nowrap;
+    color: var(--muted);
   }
 
-  /* Scrollable Table Container */
+  /* Month Table - Compact Table (No Scroll, Reader Friendly) */
   .acc-panel {
+    overflow-x: auto; /* Scrollable */
     margin: 0;
     padding: 10px 0 0;
-    overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
 
   .month-table {
+    display: table;
     width: 100%;
     min-width: 0;
-    table-layout: auto;
+    table-layout: auto; /* Changed to auto to reduce gaps (Blue line) */
   }
 
-  /* Decrease font size to 8px per request */
+  .month-table thead {
+    display: table-header-group;
+  }
+
+  .month-table tbody {
+    display: table-row-group;
+  }
+
+  .month-table tr {
+    display: table-row;
+    margin: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+  }
+
   .month-table th,
   .month-table td {
-    white-space: normal;
-    font-size: 8px; /* 8px requested */
+    display: table-cell;
     padding: 5px 2px;
+    border-bottom: 1px solid #eee;
+    text-align: right;
+    white-space: normal;
+    color: var(--primary);
+    width: auto;
+    font-size: 8px; /* 8px font request */
     word-break: break-word;
   }
 
+  .month-table th {
+    font-weight: 600;
+    color: var(--muted);
+    font-size: 9px;
+    text-transform: uppercase;
+  }
+
+  /* Reset Card Styles */
+  .month-table td[data-label="Month"] {
+    font-weight: 400;
+    font-size: 8px;
+    color: var(--primary);
+    padding-bottom: 6px;
+    border: none; /* Reset */
+    border-bottom: 1px solid #eee;
+    margin: 0;
+    display: table-cell;
+    text-align: left;
+  }
+
+  .month-table td:not([data-label="Month"])::before {
+    content: none; /* Remove labels */
+  }
+
+  /* HIDE 'Beginning' Column (2nd col) - REVERTED per user request */
+  .month-table th:nth-child(2),
+  .month-table td:nth-child(2) {
+    display: table-cell; /* Show it */
+  }
+
+  /* Shorten Headers to fit */
+  .month-table th {
+    font-size: 9px; /* Tiny headers */
+    padding: 6px 1px;
+    letter-spacing: -0.5px; /* Squeeze text */
+  }
+
+  /* Trick to replace text with shorter versions on mobile */
+  .month-table th {
+    color: transparent;
+    position: relative;
+    height: 20px;
+  }
+  .month-table th::after {
+    position: absolute;
+    left: 0;
+    top: 6px;
+    width: 100%;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  /* Manual header replacements */
+  .month-table th:nth-child(1) {
+    color: var(--muted);
+  } /* Keep "Month" or make it "#" */
+  .month-table th:nth-child(1)::after {
+    content: none;
+  }
+
+  .month-table th:nth-child(2)::after {
+    content: "Beg.";
+  }
+  .month-table th:nth-child(3)::after {
+    content: "Int.";
+  }
+  .month-table th:nth-child(4)::after {
+    content: "Prin.";
+  }
+  .month-table th:nth-child(5)::after {
+    content: "End";
+  }
+
+  /* Month Column Width */
   .month-table th:nth-child(1),
   .month-table td:nth-child(1) {
     width: auto;
     min-width: 40px;
     max-width: 50px;
+    text-align: left;
+    padding-left: 4px; /* Added slight padding */
   }
 
+  /* Add space between Principal and End columns */
+  .month-table th:nth-child(4),
+  .month-table td:nth-child(4) {
+    padding-right: 15px;
+  }
+
+  /* Adjust extras row to stack */
   .extras-row {
     flex-direction: column;
     gap: 12px;
   }
-
-  /* Reset Button */
-  .cq-btn-reset {
-    margin-top: 0;
-    width: 100%;
-  }
 }
 
-/* Reset Button */
-.cq-btn-reset {
-  padding: 10px;
-  border-radius: 8px;
-  background: var(--light-bg);
-  color: var(--muted);
-  border: 1px solid var(--border);
-  cursor: pointer;
-  margin-top: 0;
-  width: 100%;
-}
-.cq-btn-reset:hover {
-  background: #e0e0e0;
-  color: var(--primary);
-}
+.cq-btn-group { display: flex; gap: 10px; width: 100%; }
+@media (max-width: 600px) { .cq-btn-group { flex-direction: column; } }
 
 /* --------------------------------------------------- */
 /* NEW STYLES FOR REFINANCE UPDATES */
