@@ -1,0 +1,428 @@
+:root{
+  --accent:#FFAE1A;       /* Interest */
+  --muted:#4B4D6F;        /* Text */
+  --border:#DDDDDD;       /* Border */
+  --panel-bg:#FFFFFF;     /* White */
+  --primary:#1E1E2F;      /* Initial Principal */
+  --contrib:#4B4D6F;      /* Contributions (using muted/dark blue tone) */
+  --light-bg:#F3F4FA;     /* Light BG */
+  --gray-bg:#F3F3F3;      /* Gray BG */
+}
+
+#cq-widget-advanced-only{
+  font-family:'Prompt', sans-serif;
+  color:var(--primary);
+  box-sizing:border-box;
+}
+
+#cq-widget-advanced-only * {
+  box-sizing: border-box;
+}
+
+/* ------------------------ */
+/* Layout Panels */
+/* ------------------------ */
+.cq-top{
+  display:flex;
+  gap:16px; 
+  margin-bottom:16px;
+}
+.cq-col{
+  flex:1;
+  min-width:0;
+}
+.cq-left,
+.cq-right {
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 14px; 
+  background: var(--panel-bg);
+  display: flex;
+  flex-direction: column;
+  gap: 14px; 
+}
+
+@media(max-width:600px){
+  .cq-top{
+    flex-direction:column;
+    gap:12px;
+  }
+}
+
+/* ------------------------ */
+/* Inputs */
+/* ------------------------ */
+label {
+  display: block;
+  font-size: 13px;
+  font-weight: 300;
+  margin-bottom: 6px; 
+  line-height: 1.4;
+}
+
+.cq-field {
+  display: flex;
+  flex-direction: column;
+}
+input[type=number], select{
+  width:100%;
+  padding:8px; 
+  border:1px solid #dcdce6;
+  border-radius:8px;
+  font-size:15px;
+  font-weight: 400; 
+  background: #fff;
+}
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+}
+
+.cq-btn{
+  padding:10px;
+  border-radius:8px;
+  background:var(--primary);
+  color:#fff;
+  cursor:pointer;
+  border:0;
+  width: 100%;
+  font-size: 14px; 
+}
+.cq-btn.active{
+  background:var(--primary);
+  color:#fff;
+  cursor:pointer;
+}
+.cq-btn:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.cq-btn-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.cq-btn-reset {
+  width: 100%;
+  margin-top: 0;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--light-bg);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
+.cq-btn-reset:hover {
+  background: #e0e0e0;
+  color: var(--primary);
+}
+
+/* Radio Group */
+.radio-group {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  margin-bottom: 0;
+  cursor: pointer;
+}
+.radio-label input[type="radio"] {
+  accent-color: var(--primary);
+  width:auto;
+  margin:0;
+}
+
+/* Optional Container Transition */
+#cq-optional-container {
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+.small{
+  font-size:13px;
+  color:var(--muted);
+}
+.error{
+  color:#b00020;
+  font-size:13px;
+  margin-top:6px;
+  display:none;
+}
+
+.extras-row{
+  display:flex;
+  gap:8px; 
+  margin-bottom: 0;
+}
+.extras-row .half{
+  flex:1;
+}
+
+/* ------------------------ */
+/* KPI Values */
+/* ------------------------ */
+.kpi-line{
+  display:flex;
+  justify-content:space-between;
+  margin:6px 0;
+}
+.kpi-line span:last-child {
+  font-weight: 500; 
+}
+
+.kpi-divider{
+  border-top:1px solid #eee;
+  margin:12px 0;
+}
+
+.optional-divider {
+  border-top: 1px solid #eee;
+  margin: 0 0 5px 0;
+  position: relative;
+}
+
+/* ------------------------ */
+/* Donut Chart */
+/* ------------------------ */
+.donut-wrap{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  margin-top:10px;
+}
+.donut-svg{
+  width:180px;
+  height:180px;
+}
+
+.chart-tooltip {
+  position: fixed;
+  display: none;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  pointer-events: none;
+  z-index: 1000;
+  white-space: nowrap;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+
+.legend{
+  display:flex;
+  gap:12px;
+  font-size:13px;
+  color:var(--muted);
+}
+.swatch{
+  width:14px;
+  height:14px;
+  border-radius:3px;
+}
+.swatch.initial{ background:var(--primary); }
+.swatch.contrib{ background:var(--contrib); }
+.swatch.interest{ background:var(--accent); }
+
+/* ------------------------ */
+/* Amortization Section */
+/* ------------------------ */
+.toggle-link{
+  display:none;
+  margin-top:12px;
+  color:var(--accent);
+  text-decoration:none;
+  cursor:pointer;
+}
+
+.am-full{
+  margin-top:18px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:6px;
+}
+.am-head{
+  display:flex;
+  justify-content:space-between;
+  padding:6px 8px;
+}
+.am-note{
+  font-size:13px;
+  color:var(--muted);
+}
+
+/* Table / Row Styles */
+/* YEAR ROW = 5 COLUMNS */
+.acc-row{
+  display:grid;
+  /* Year | Deposit | Interest | Ending */
+  grid-template-columns:100px 1fr 1fr 1fr; 
+  padding:10px 12px;
+  align-items:center;
+  border-bottom:1px solid #f1f3f8;
+  cursor:pointer;
+  background:#fff;
+}
+.acc-row:hover{
+  background:#f9f9f9;
+}
+.acc-row .year{
+  font-weight:500;
+  color:var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.2s ease;
+}
+.acc-row:hover .year{
+  color:var(--accent);
+}
+.acc-row .icon {
+  font-size: 38px;
+  line-height: 1;
+  font-weight: 300;
+}
+.acc-row .num{
+  text-align:right;
+}
+
+.acc-panel{
+  display:none;
+  padding:10px 0 18px;
+}
+
+/* Month Table */
+.month-table{
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed; 
+}
+.month-table th:nth-child(1),
+.month-table td:nth-child(1){
+  width:100px;
+  text-align:left;
+}
+.month-table th:nth-child(n+2),
+.month-table td:nth-child(n+2){
+  width:1fr;
+  text-align:right;
+}
+
+.month-table th,
+.month-table td{
+  padding:8px;
+  border-bottom:1px solid #eee;
+  font-size:14px;
+}
+.month-table th{
+  color:var(--muted);
+  text-align:left;
+}
+
+/* Tooltips */
+.cq-tooltip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background: #e0e0e0;
+  color: #666;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: help;
+  margin-left: 6px;
+  position: relative;
+  vertical-align: middle;
+}
+.cq-tooltip-icon:hover {
+  background: var(--primary);
+  color: #fff;
+}
+.cq-tooltip-icon::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: 125%; 
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(30, 30, 47, 0.95);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: normal;
+  width: max-content;
+  max-width: 200px;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  z-index: 100;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  visibility: hidden;
+  font-weight: 400;
+}
+.cq-tooltip-icon:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+.cq-tooltip-icon::before {
+  content: "";
+  position: absolute;
+  bottom: 85%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgba(30, 30, 47, 0.95) transparent transparent transparent;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s;
+}
+.cq-tooltip-icon:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  #cq-widget-advanced-only { padding: 0; }
+  .cq-top { flex-direction: column; gap: 16px; }
+  .cq-left, .cq-right { padding: 16px; }
+  
+  .donut-svg { width: 150px; height: 150px; }
+  
+  .acc-row {
+    flex-wrap: wrap;
+    display: flex;
+    gap: 4px;
+  }
+  .acc-row .year { width: 100%; margin-bottom: 4px; font-size: 14px; }
+  .acc-row .num {
+    flex: 1;
+    font-size: 11px;
+    white-space: nowrap;
+    text-align: left;
+  }
+  
+  .month-table th, .month-table td {
+    padding: 4px 2px;
+    font-size: 10px;
+  }
+  .month-table th:nth-child(1), .month-table td:nth-child(1) { width: 40px; }
+  
+  .extras-row { flex-direction: column; gap: 12px; }
+  .cq-btn-group { flex-direction: column; }
+}

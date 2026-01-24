@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple Interest Calculator</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="simple_interest_calc.css" />
+  
+  <!-- Font: Prompt -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- Copy from here for embedding -->
+<div id="cq-widget-advanced-only">
+
+  <div class="cq-top">
+    <!-- LEFT PANEL -->
+    <div class="cq-col cq-left">
+
+      <div class="cq-field">
+        <label for="cq-initial-investment">
+          Initial investment
+          <span class="cq-tooltip-icon" data-tip="Amount of money you open the account with">?</span>
+        </label>
+        <input id="cq-initial-investment" type="number" min="0" step="0.01" placeholder="10000">
+      </div>
+
+      <div class="extras-row">
+        <div class="half">
+          <label for="cq-contrib-annual">Annual contribution</label>
+          <input id="cq-contrib-annual" type="number" min="0" step="0.01" placeholder="0">
+        </div>
+        <div class="half">
+          <label for="cq-contrib-monthly">Monthly contribution</label>
+          <input id="cq-contrib-monthly" type="number" min="0" step="0.01" placeholder="0">
+        </div>
+      </div>
+
+      <div class="cq-field">
+        <label style="margin-bottom:8px">Contribution timing</label>
+        <div class="radio-group">
+          <label class="radio-label">
+            <input type="radio" name="timing" id="cq-timing-beg" value="beginning"> Beginning
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="timing" id="cq-timing-end" value="end" checked> End
+          </label>
+        </div>
+      </div>
+
+      <div class="cq-field">
+        <label for="cq-rate">
+          Interest rate (%)
+          <span class="cq-tooltip-icon" data-tip="Annual fixed interest rate">?</span>
+        </label>
+        <input id="cq-rate" type="number" min="0" step="0.01" placeholder="5">
+      </div>
+
+      <div class="cq-field">
+        <label for="cq-compound-freq">
+          Compounding frequency
+        </label>
+        <select id="cq-compound-freq">
+          <option value="1">Annually</option>
+          <option value="2">Semiannually</option>
+          <option value="4">Quarterly</option>
+          <option value="12" selected>Monthly</option>
+          <option value="24">Semimonthly</option>
+          <option value="26">Biweekly</option>
+          <option value="52">Weekly</option>
+          <option value="365">Daily</option>
+          <option value="continuous">Continuously</option>
+        </select>
+      </div>
+
+      <div class="cq-field">
+        <label>Investment length</label>
+        <div class="extras-row" style="margin-bottom:0">
+          <div class="half">
+            <input id="cq-years" type="number" min="0" placeholder="Years (e.g. 5)">
+          </div>
+          <div class="half">
+            <input id="cq-months" type="number" min="0" max="11" placeholder="Months (Opt)">
+          </div>
+        </div>
+      </div>
+
+      <div class="extras-row" style="margin-top: 12px;">
+        <div class="half">
+          <label for="cq-tax-rate" style="font-size:12px">
+            Tax rate (%)
+            <span class="cq-tooltip-icon" data-tip="Your marginal income tax rate applies to the interest or return on investment. If you only want to calculate interest compounding or if your interest income is not taxable, enter 0.">?</span>
+          </label>
+          <input id="cq-tax-rate" type="number" min="0" step="0.01" placeholder="0">
+        </div>
+        <div class="half">
+          <label for="cq-inflation-rate" style="font-size:12px">Inflation rate (%)</label>
+          <input id="cq-inflation-rate" type="number" min="0" step="0.01" placeholder="0">
+        </div>
+      </div>
+
+      <div class="cq-btn-group">
+        <button id="cq-calc-btn" class="cq-btn" disabled>Calculate Interest</button>
+        <button id="cq-reset-btn" class="cq-btn-reset" style="display:none;">Reset</button>
+      </div>
+      <div id="cq-input-error" class="error"></div>
+
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="cq-col cq-right">
+      <div class="kpi-text">
+        <div class="kpi-line" style="font-weight:600; color:var(--primary); font-size:18px;">
+          <span class="label">Ending Balance</span>
+          <span id="txt-ending-balance" style="color:var(--accent);">$0.00</span>
+        </div>
+
+        <div class="kpi-divider"></div>
+
+        <div class="kpi-line"><span class="label">Total Principal</span><span id="txt-total-principal">$0.00</span></div>
+        <div class="kpi-line"><span class="label">Total Contributions</span><span id="txt-total-contrib">$0.00</span></div>
+        <div class="kpi-line"><span class="label">Total Interest Earned</span><span id="txt-total-interest">$0.00</span></div>
+
+        <div id="row-buying-power" class="kpi-line" style="display:none; margin-top:12px; border-top:1px dashed #eee; padding-top:8px;">
+           <span class="label">Buying Power (Inflation Adj.)</span>
+           <span id="txt-buying-power" style="font-weight:600">$0.00</span>
+        </div>
+      </div>
+
+      <div class="donut-wrap">
+        <svg class="donut-svg" viewBox="0 0 42 42">
+          <circle r="15.915" cx="21" cy="21" fill="transparent" stroke="#e6eef8" stroke-width="10"></circle>
+
+          <!-- 3 Segments: Interest, Contributions, Initial -->
+          <!-- Interest -->
+          <circle id="donut-interest" class="donut-segment" r="15.915" cx="21" cy="21" fill="transparent"
+                  stroke="#FFAE1A" stroke-width="10" stroke-dasharray="0 100"
+                  transform="rotate(-90 21 21)"></circle>
+          
+          <!-- Contributions -->
+          <circle id="donut-contrib" class="donut-segment" r="15.915" cx="21" cy="21" fill="transparent"
+                  stroke="#4B4D6F" stroke-width="10" stroke-dasharray="0 100"
+                  transform="rotate(-90 21 21)"></circle>
+
+          <!-- Initial -->
+          <circle id="donut-initial" class="donut-segment" r="15.915" cx="21" cy="21" fill="transparent"
+                  stroke="#1E1E2F" stroke-width="10" stroke-dasharray="0 100"
+                  transform="rotate(-90 21 21)"></circle>
+
+          <text id="donut-label" x="21" y="22.5" font-size="4.5" text-anchor="middle"></text>
+        </svg>
+        
+        <div id="chart-tooltip" class="chart-tooltip"></div>
+
+        <div class="legend">
+          <div class="item"><span class="swatch initial"></span> Initial</div>
+          <div class="item"><span class="swatch contrib"></span> Contribs</div>
+          <div class="item"><span class="swatch interest"></span> Interest</div>
+        </div>
+      </div>
+
+      <a id="toggle-am-link" class="toggle-link">View Annual Schedule</a>
+    </div>
+
+  </div>
+
+  <div id="amortization-full" class="am-full" style="display:none">
+    <div class="am-head">
+      <div class="title">Accumulation Schedule</div>
+      <div id="am-total-duration" class="muted"></div>
+    </div>
+
+    <div id="acc-root"></div>
+  </div>
+</div>
+<!-- End Copy -->
+
+<!-- JS -->
+<script src="simple_interest_calc.js"></script>
+
+</body>
+</html>

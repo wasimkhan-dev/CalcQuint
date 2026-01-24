@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Amortization Calculator</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="amortization_styles.css" />
+  
+  <!-- Font: Prompt -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- Copy from here for embedding -->
+<div id="cq-widget-amortization">
+
+  <div class="cq-top">
+    <!-- LEFT PANEL -->
+    <div class="cq-col cq-left">
+
+      <!-- Loan Amount -->
+      <div class="cq-field">
+        <label for="cq-loan-amount">
+          Loan amount ($)
+          <span class="cq-tooltip-icon" data-tip="The total amount you are borrowing.">?</span>
+        </label>
+        <input id="cq-loan-amount" type="number" min="0" step="0.01" placeholder="100000">
+      </div>
+
+      <!-- Loan Term (Years & Months) -->
+      <div class="cq-field">
+        <label>
+          Loan term
+          <span class="cq-tooltip-icon" data-tip="The length of time you have to pay off the loan.">?</span>
+        </label>
+        <div class="extras-row" style="margin-bottom:0">
+          <div class="half">
+            <label for="cq-loan-term-years" class="sub-label">Years</label>
+            <input id="cq-loan-term-years" type="number" min="0" placeholder="30">
+          </div>
+          <div class="half">
+            <label for="cq-loan-term-months" class="sub-label">Months</label>
+            <input id="cq-loan-term-months" type="number" min="0" max="11" placeholder="0">
+          </div>
+        </div>
+      </div>
+
+      <!-- Interest Rate -->
+      <div class="cq-field">
+        <label for="cq-rate">
+          Interest rate (%)
+          <span class="cq-tooltip-icon" data-tip="The annual fixed interest rate.">?</span>
+        </label>
+        <input id="cq-rate" type="number" min="0" step="0.01" placeholder="6.0">
+      </div>
+
+      <!-- Extra Payments Toggle -->
+      <div style="margin-bottom: 2px; margin-top: 2px;">
+        <div class="optional-divider"></div>
+        <label style="font-size:14px; color:var(--primary); font-weight:600; display:flex; align-items:center; cursor:pointer;">
+          <input type="checkbox" id="cq-toggle-extra" style="width:auto; margin-right:2px;">
+          Optional: make extra payments
+        </label>
+      </div>
+
+      <!-- Extra Payments Container -->
+      <div id="cq-extra-container" style="display:none;">
+        <div class="extra-pay-box">
+          
+          <!-- Loan Start Date -->
+          <div class="extra-row">
+            <label>Loan start date</label>
+            <div class="date-inputs">
+                <select id="cq-start-month"></select>
+                <input type="number" id="cq-start-year" placeholder="YYYY" style="width: 70px;">
+            </div>
+          </div>
+
+          <!-- Extra Monthly Pay -->
+          <div class="extra-row">
+            <label>Extra monthly pay</label>
+            <div class="pay-inputs">
+                <input type="number" id="cq-extra-monthly" placeholder="$0" class="pay-amt">
+                <span>from</span>
+                <select id="cq-extra-monthly-month"></select>
+                <input type="number" id="cq-extra-monthly-year" placeholder="YYYY" style="width: 60px;">
+            </div>
+          </div>
+
+          <!-- Extra Yearly Pay -->
+          <div class="extra-row">
+            <label>Extra yearly pay</label>
+            <div class="pay-inputs">
+                <input type="number" id="cq-extra-yearly" placeholder="$0" class="pay-amt">
+                <span style="font-weight:300px">from</span>
+                <select id="cq-extra-yearly-month"></select>
+                <input type="number" id="cq-extra-yearly-year" placeholder="YYYY" style="width: 60px;">
+            </div>
+          </div>
+
+          <!-- Extra One-time Pay -->
+          <div class="extra-row">
+            <label>Extra one-time pay</label>
+            <div class="pay-inputs">
+                <input type="number" id="cq-extra-onetime" placeholder="$0" class="pay-amt">
+                <span style="font-weight:300px"  >in</span>
+                <select id="cq-extra-onetime-month"></select>
+                <input type="number" id="cq-extra-onetime-year" placeholder="YYYY" style="width: 60px;">
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="cq-btn-group">
+        <button id="cq-calc-btn" class="cq-btn" disabled>Calculate</button>
+        <button id="cq-reset-btn" class="cq-btn-reset" style="display:none;">Reset</button>
+      </div>
+      <div id="cq-input-error" class="error"></div>
+
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="cq-col cq-right">
+      <div class="kpi-text">
+        <div class="kpi-line" style="font-weight:600; color:var(--primary); font-size:16px;">
+          <span class="label">Monthly Payment</span>
+          <span id="txt-monthly-payment" style="color:var(--accent);">$0.00</span>
+        </div>
+        
+        <div class="kpi-divider"></div>
+
+        <div class="kpi-line"><span class="label">Total of <b><span id="txt-total-months-count">0</span></b> Payments</span><span id="txt-total-payments">$0.00</span></div>
+        <div class="kpi-line"><span class="label">Total Interest Paid</span><span id="txt-total-interest">$0.00</span></div>
+        
+        <!-- Payoff Date KPI if extra payments used -->
+        <div class="kpi-line" id="kpi-payoff-date" style="display:none">
+            <span class="label">Payoff Date</span>
+            <span id="txt-payoff-date" style="font-weight:600"></span>
+        </div>
+      </div>
+
+      <div class="donut-wrap">
+        <svg class="donut-svg" viewBox="0 0 42 42">
+          <circle r="15.915" cx="21" cy="21" fill="transparent" stroke="#e6eef8" stroke-width="10"></circle>
+
+          <circle id="donut-interest" class="donut-segment" r="15.915" cx="21" cy="21" fill="transparent"
+                  stroke="#FFAE1A" stroke-width="10" stroke-dasharray="0 100"
+                  transform="rotate(-90 21 21)"></circle>
+
+          <circle id="donut-principal" class="donut-segment" r="15.915" cx="21" cy="21" fill="transparent"
+                  stroke="#1E1E2F" stroke-width="10" stroke-dasharray="0 100"
+                  transform="rotate(-90 21 21)"></circle>
+
+          <text id="donut-label" x="21" y="22.5" font-size="4.5" text-anchor="middle"></text>
+        </svg>
+        
+        <div id="chart-tooltip" class="chart-tooltip"></div>
+
+        <div class="legend">
+          <div class="item"><span class="swatch principal"></span> Principal</div>
+          <div class="item"><span class="swatch interest"></span> Interest</div>
+        </div>
+      </div>
+
+      <a id="toggle-am-link" class="toggle-link">View Amortization Table</a>
+    </div>
+
+  </div>
+
+  <div id="amortization-full" class="am-full" style="display:none">
+    <div class="am-head">
+      <div class="title">Amortization schedule</div>
+      <div id="am-total-months" class="muted"></div>
+    </div>
+
+    <div id="acc-root"></div>
+
+    <div id="csv-ctas" class="csv-ctas" style="display:none">
+      <button id="export-csv-btn" class="btn-primary">Export CSV</button>
+      <div id="am-note" class="am-note"></div>
+    </div>
+  </div>
+</div>
+<!-- End Copy -->
+
+<!-- JS -->
+<script src="amortization_script.js"></script>
+
+</body>
+</html>

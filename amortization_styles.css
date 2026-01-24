@@ -6,15 +6,16 @@
   --primary:#1E1E2F;      /* Primary/Secondary */
   --light-bg:#F3F4FA;     /* Light BG */
   --gray-bg:#F3F3F3;      /* Gray BG */
+  --input-border: #dcdce6;
 }
 
-#cq-widget-advanced-only{
+#cq-widget-amortization {
   font-family:'Prompt', sans-serif;
   color:var(--primary);
   box-sizing:border-box;
 }
 
-#cq-widget-advanced-only * {
+#cq-widget-amortization * {
   box-sizing: border-box;
 }
 
@@ -23,7 +24,7 @@
 /* ------------------------ */
 .cq-top{
   display:flex;
-  gap:16px; /* User requested 16px */
+  gap:16px; 
   margin-bottom:16px;
 }
 .cq-col{
@@ -34,11 +35,11 @@
 .cq-right {
   border: 1px solid var(--border);
   border-radius: 15px;
-  padding: 14px; /* User requested 14px */
+  padding: 14px; 
   background: var(--panel-bg);
   display: flex;
   flex-direction: column;
-  gap: 14px; /* User requested 14px */
+  gap: 14px; 
 }
 
 @media(max-width:600px){
@@ -55,22 +56,29 @@ label {
   display: block;
   font-size: 13px;
   font-weight: 300;
-  margin-bottom: 6px; /* User requested 6px */
+  margin-bottom: 6px; 
   line-height: 1.4;
+  color: var(--primary);
+}
+
+.sub-label {
+    font-size: 12px;
+    color: var(--muted);
 }
 
 .cq-field {
   display: flex;
   flex-direction: column;
 }
-input[type=number], select{
+input[type=number], select {
   width:100%;
-  padding:8px; /* User requested 8px */
-  border:1px solid #dcdce6;
+  padding:8px; 
+  border:1px solid var(--input-border);
   border-radius:8px;
   font-size:15px;
   font-weight: 400; 
   background: #fff;
+  color: var(--primary);
 }
 select {
     appearance: none;
@@ -88,7 +96,8 @@ select {
   cursor:pointer;
   border:0;
   width: 100%;
-  font-size: 14px; /* Consistent size */
+  font-size: 14px; 
+  transition: background 0.2s;
 }
 .cq-btn.active{
   background:var(--primary);
@@ -106,21 +115,21 @@ select {
   gap: 10px;
   margin-top: 10px;
 }
-/* Ensure Reset button fills space or is consistent */
 .cq-btn-reset {
   width: 100%;
   margin-top: 0;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--light-bg);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
+.cq-btn-reset:hover {
+  background: #e0e0e0;
+  color: var(--primary);
 }
 
-/* Optional Container Transition */
-#cq-optional-container {
-  overflow: hidden;
-  transition: max-height 0.3s ease-out;
-}
-.small{
-  font-size:13px;
-  color:var(--muted);
-}
 .error{
   color:#b00020;
   font-size:13px;
@@ -128,28 +137,9 @@ select {
   display:none;
 }
 
-.advanced-row{
-  margin-top:8px;
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-.advanced-row label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 0;
-  white-space: nowrap; /* Prevent "Advanced rate" from wrapping */
-}
-.adv-info{
-  font-size:12px;
-  color:var(--muted);
-  line-height: 1.2;
-}
-
 .extras-row{
   display:flex;
-  gap:8px; /* User requested 8px */
+  gap:8px; 
   margin-bottom: 0;
 }
 .extras-row .half{
@@ -164,9 +154,8 @@ select {
   justify-content:space-between;
   margin:6px 0;
 }
-/* Target the value span (2nd child) */
 .kpi-line span:last-child {
-  font-weight: 500; /* Requested 500 */
+  font-weight: 500; 
 }
 
 .kpi-divider{
@@ -206,20 +195,22 @@ select {
   z-index: 1000;
   white-space: nowrap;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  transition: opacity 0.2s, transform 0.1s;
 }
-
 
 .legend{
   display:flex;
   gap:12px;
   font-size:13px;
   color:var(--muted);
+  margin-top: 10px;
 }
 .swatch{
   width:14px;
   height:14px;
   border-radius:3px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 4px;
 }
 .swatch.principal{ background:#1E1E2F; }
 .swatch.interest{ background:#FFAE1A; }
@@ -228,11 +219,17 @@ select {
 /* Amortization Section */
 /* ------------------------ */
 .toggle-link{
-  display:none;
+  display:none; /* hidden initially */
   margin-top:12px;
   color:var(--accent);
   text-decoration:none;
   cursor:pointer;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+}
+.toggle-link:hover {
+    text-decoration: underline;
 }
 
 .am-full{
@@ -245,20 +242,25 @@ select {
   display:flex;
   justify-content:space-between;
   padding:6px 8px;
+  align-items: center;
+}
+.am-head .title {
+    font-weight: 600;
+    color: var(--primary);
+}
+.am-head .muted {
+    font-size: 13px;
+    color: var(--muted);
 }
 .am-note{
   font-size:13px;
   color:var(--muted);
 }
 
-/* --------------------------------------------------- */
-/* 100% PERFECT COLUMN ALIGNMENT (FINAL FIX APPLIED)  */
-/* --------------------------------------------------- */
-
-/* YEAR ROW = 5 COLUMNS (Matches table layout exactly) */
+/* Year Rows */
 .acc-row{
   display:grid;
-  grid-template-columns:150px 1fr 1fr 1fr 1fr; /* EXACT match */
+  grid-template-columns:150px 1fr 1fr 1fr 1fr; 
   padding:10px 12px;
   align-items:center;
   border-bottom:1px solid #f1f3f8;
@@ -274,84 +276,81 @@ select {
   display: flex;
   align-items: center;
   gap: 8px;
-  transition: color 0.2s ease;
 }
 .acc-row:hover .year{
   color:var(--accent);
 }
 .acc-row .icon {
-  font-size: 38px; /* Increased size */
+  font-size: 24px; 
   line-height: 1;
   font-weight: 300;
+  width: 20px;
+  text-align: center;
 }
 .acc-row .num{
   text-align:right;
+  font-size: 14px;
 }
 
-/* MONTH PANELS */
+/* Month Panels */
 .acc-panel{
   display:none;
   padding:10px 0 18px;
+  background: var(--light-bg); /* Slight contrast for inner table */
+  border-bottom: 1px solid var(--border);
 }
 
-/* ------------------------ */
 /* Month Table */
-/* ------------------------ */
 .month-table{
   width:100%;
   border-collapse:collapse;
-  table-layout:fixed; /* REQUIRED to align with grid */
+  table-layout:fixed; 
 }
-
-/* Match 5 column design */
 .month-table th:nth-child(1),
 .month-table td:nth-child(1){
-  width:150px; /* matches Year column */
+  width:150px; 
   text-align:left;
+  padding-left: 20px; /* Indent slightly inside panel */
 }
-
 .month-table th:nth-child(n+2),
 .month-table td:nth-child(n+2){
-  width:1fr; /* evenly distributed numeric columns */
   text-align:right;
 }
-
 .month-table th,
 .month-table td{
   padding:8px;
-  border-bottom:1px solid #eee;
-  font-size:14px;
+  border-bottom:1px solid #e0e0e0;
+  font-size:13px;
 }
 .month-table th{
   color:var(--muted);
   text-align:left;
-}
-.month-table td.left{
-  text-align:left;
+  font-weight: 500;
 }
 
-
-
-/* ------------------------ */
 /* CSV Section */
-/* ------------------------ */
 .btn-primary{
   background:var(--accent);
   padding:8px 14px;
   border-radius:8px;
   cursor:pointer;
   border:0;
+  color: #fff;
+  font-size: 13px;
 }
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
 .csv-ctas{
   margin-top:12px;
   display:flex;
   gap:10px;
   justify-content:flex-end;
+  padding: 0 8px 8px;
 }
 
-/* ------------------------ */
-/* Tooltips (Question Mark) */
-/* ------------------------ */
+/* Tooltips */
 .cq-tooltip-icon {
   display: inline-flex;
   align-items: center;
@@ -368,17 +367,14 @@ select {
   position: relative;
   vertical-align: middle;
 }
-
 .cq-tooltip-icon:hover {
   background: var(--primary);
   color: #fff;
 }
-
-/* Tooltip Popup */
 .cq-tooltip-icon::after {
   content: attr(data-tip);
   position: absolute;
-  bottom: 125%; /* Above the icon */
+  bottom: 125%; 
   left: 50%;
   transform: translateX(-50%);
   background: rgba(30, 30, 47, 0.95);
@@ -398,71 +394,76 @@ select {
   visibility: hidden;
   font-weight: 400;
 }
-
 .cq-tooltip-icon:hover::after {
   opacity: 1;
   visibility: visible;
 }
 
-/* Small arrow */
-.cq-tooltip-icon::before {
-  content: "";
-  position: absolute;
-  bottom: 85%; /* Just below the popup */
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: rgba(30, 30, 47, 0.95) transparent transparent transparent;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s;
+/* ------------------------ */
+/* EXTRA PAYMENTS STYLES    */
+/* ------------------------ */
+.extra-pay-box {
+    margin-top: 4px;
 }
 
-.cq-tooltip-icon:hover::before {
-  opacity: 1;
-  visibility: visible;
+.extra-row {
+    margin-bottom: 5px;
+}
+.extra-row:last-child {
+    margin-bottom: 0;
+}
+.extra-row label {
+    margin-bottom: 4px;
+    font-size: 13px;
+    font-weight: 300;
 }
 
+.date-inputs, .pay-inputs {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+.pay-inputs span {
+    font-size: 13px;
+    color: var(--primary);
+}
 
-/* --------------------------------------------------- */
-/* MOBILE RESPONSIVENESS (ADDED) */
-/* --------------------------------------------------- */
+/* Specific widths for inputs inside extra box to match image */
+.extra-pay-box select {
+    width: auto;
+    min-width: 70px;
+    padding: 6px 24px 6px 8px; /* Room for arrow */
+    font-size: 14px;
+    background-color: #fff;
+}
+.extra-pay-box input {
+    width: 60px;
+    padding: 6px;
+    font-size: 14px;
+}
+.extra-pay-box input.pay-amt {
+    width: 90px;
+}
 
+/* ------------------------ */
+/* MOBILE RESPONSIVENESS    */
+/* ------------------------ */
 @media (max-width: 600px) {
-
-  /* Global Container Spacing */
-  #cq-widget-advanced-only {
+  #cq-widget-amortization {
     padding: 0;
   }
-  
-  /* Stack Panels */
-  .cq-top {
-    flex-direction: column;
-    gap: 16px;
-  }
-  
-  /* Panel Padding */
   .cq-left, .cq-right {
     padding: 16px;
   }
-
-  /* Prevent iOS Zoom on focus */
-  input[type=number], select, textarea {
+  input[type=number], select {
     font-size: 16px !important; 
   }
-
-  /* Adjust Donut Chart Size */
   .donut-svg {
     width: 150px;
     height: 150px;
   }
 
-  /* --------------------------------- */
-  /* Responsive Amortization Schedule */
-  /* --------------------------------- */
-  
-  /* Change Grid to Flex/Block for Rows */
+  /* Amortization Table Mobile */
   .acc-row {
     display: flex;
     flex-wrap: wrap;
@@ -470,32 +471,22 @@ select {
     gap: 4px;
     border-bottom: 1px solid #eee;
   }
-
-  /* Year always full width on top */
   .acc-row .year {
     width: 100%;
-    font-weight: 500;
+    font-weight: 600;
     margin-bottom: 2px;
-    font-size: 12px;
+    font-size: 13px;
   }
-
-  /* Data columns share space */
   .acc-row .num {
     text-align: left;
-    flex: 1; /* Distribute evenly */
-    font-size: 10px;
+    flex: 1; 
+    font-size: 11px;
     color: var(--muted);
     white-space: nowrap;
   }
-  
-  /* Add labels via pseudo-elements for clarity if desired, 
-     or just let them sit. Let's keep it clean: 
-     Principal | Interest | Balance 
-  */
-  
-  /* Month Table - Compact Table (No Scroll, Reader Friendly) */
+
   .acc-panel {
-    overflow-x: hidden; /* No scroll */
+    overflow-x: hidden; 
     margin: 0;
     padding: 10px 0 0;
   }
@@ -504,74 +495,34 @@ select {
     display: table;
     width: 100%;
     table-layout: auto; 
-    font-size: 8px; /* Requested 8px */
+    font-size: 9px; 
   }
-
   .month-table thead {
     display: table-header-group;
   }
-
   .month-table tbody {
     display: table-row-group;
   }
-
   .month-table tr {
     display: table-row;
-    margin: 0;
-    border: none;
-    background: transparent;
-    box-shadow: none;
   }
-
   .month-table th, .month-table td {
     display: table-cell;
-    padding: 5px 2px; /* Tightened padding */
-    border-bottom: 1px solid #eee;
+    padding: 4px 2px; 
     text-align: right;
     white-space: normal;
-    word-break: break-word; /* Allow wrap */
+    word-break: break-word; 
     color: var(--primary);
     width: auto;
   }
-  
   .month-table th {
     font-weight: 600;
     color: var(--muted);
-    font-size: 8px; /* Requested 8px */
+    font-size: 9px; 
     text-transform: uppercase;
   }
 
-  /* Reset Card Styles */
-  .month-table td[data-label="Month"] {
-    font-weight: 400;
-    font-size: 8px; /* Requested 8px */
-    color: var(--primary);
-    padding-bottom: 6px;
-    border: none; /* Reset */
-    border-bottom: 1px solid #eee; 
-    margin: 0;
-    display: table-cell;
-    text-align: left;
-  }
-
-  .month-table td:not([data-label="Month"])::before {
-    content: none; /* Remove labels */
-  }
-
-  /* HIDE 'Beginning' Column (2nd col) - REVERTED per user request */
-  .month-table th:nth-child(2),
-  .month-table td:nth-child(2) {
-    display: table-cell; /* Show it */
-  }
-
-  /* Shorten Headers to fit */
-  .month-table th {
-    font-size: 8px; /* Requested 8px */
-    padding: 5px 1px;
-    letter-spacing: -0.5px; 
-  }
-  
-  /* Trick to replace text with shorter versions on mobile */
+  /* Mobile Headers Shorthand */
   .month-table th { color: transparent; position: relative; height: 20px; }
   .month-table th::after { 
     position: absolute; 
@@ -580,9 +531,7 @@ select {
     color: var(--muted); 
     text-align: right;
   }
-  
-  /* Manual header replacements */
-  .month-table th:nth-child(1) { color: var(--muted); } /* Keep "Month" or make it "#" */
+  .month-table th:nth-child(1) { color: var(--muted); }
   .month-table th:nth-child(1)::after { content: none; }
   
   .month-table th:nth-child(2)::after { content: "Beg."; }
@@ -590,53 +539,23 @@ select {
   .month-table th:nth-child(4)::after { content: "Prin."; }
   .month-table th:nth-child(5)::after { content: "End"; }
 
-  /* Month Column Width */
+  /* Month Column */
   .month-table th:nth-child(1),
   .month-table td:nth-child(1) {
-    width: 50px; /* Reduced slightly */
+    width: 60px; 
     text-align: left;
     padding-left: 2px;
   }
-
-  /* Add space between Principal and End columns */
-  .month-table th:nth-child(4),
-  .month-table td:nth-child(4) {
-    padding-right: 5px; /* Reduced */
-  }
-  
-  /* Tweak Data cells */
-  .month-table td {
-    font-size: 8px; /* Requested 8px */
-    padding: 5px 1px;
-    letter-spacing: -0.5px;
+  .month-table td[data-label="Month"] {
+      font-weight: 500;
   }
 
-  
-  /* Adjust extras row to stack */
-  .extras-row {
-    flex-direction: column;
-    gap: 12px;
+  /* Extra Payments Mobile Wrap */
+  .date-inputs, .pay-inputs {
+      flex-wrap: wrap;
   }
-}
-
-/* Reset Button */
-.cq-btn-reset {
-  padding: 10px;
-  border-radius: 8px;
-  background: var(--light-bg);
-  color: var(--muted);
-  border: 1px solid var(--border);
-  cursor: pointer;
-  margin-top: 0;
-  width: 100%;
-}
-.cq-btn-reset:hover {
-  background: #e0e0e0;
-  color: var(--primary);
-}
-
-@media (max-width: 600px) {
-  .cq-btn-group {
-    flex-direction: column;
+  .extra-pay-box input.pay-amt {
+      width: 100%; /* Full width on mobile for amount? Or keep compact? Let's keep compact but maybe flex grow */
+      flex: 1;
   }
 }
